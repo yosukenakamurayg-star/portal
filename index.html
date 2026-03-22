@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="マイポータル">
 <title>マイポータル</title>
 <style>
@@ -23,22 +22,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sdot.spin{background:#EF9F27;animation:pulse .7s ease-in-out infinite;}
 .sdot.err{background:var(--red);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-/* ─ 下部タブバー ─ */
+/* タブバー */
 .tabbar{position:fixed;bottom:0;left:0;right:0;height:var(--tabbar);background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;}
-.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);font-size:10px;padding:4px 0;border:none;background:none;transition:color .15s;}
+.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);font-size:10px;padding:4px 0;border:none;background:none;}
 .tbtn.on{color:var(--purple);}
 .tbtn.on.t1{color:var(--blue);}
 .tbtn.on.t2{color:var(--teal);}
 .tbtn.on.t3{color:var(--amber);}
 .tbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .pane{display:none;}.pane.on{display:block;}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
+/* メトリクス */
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px;}
 .metric{background:var(--bg);border-radius:12px;padding:12px;border:1px solid var(--border);}
 .mlabel{font-size:11px;color:var(--text3);margin-bottom:2px;}
-.mval{font-size:22px;font-weight:600;color:var(--text);line-height:1.1;}
+.mval{font-size:24px;font-weight:600;color:var(--text);line-height:1.1;}
 .msub{font-size:11px;color:var(--text3);}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
-@media(max-width:600px){.two{grid-template-columns:1fr;}.metrics{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.two{grid-template-columns:1fr;}.metrics{grid-template-columns:repeat(3,1fr);}}
 .card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
 .shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .stitle{font-size:13px;font-weight:600;}
@@ -56,12 +56,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bpurple{background:#EEEDFE;color:#3C3489;}.bblue{background:#E6F1FB;color:#0C447C;}
 .bteal{background:#E1F5EE;color:#085041;}.bamber{background:#FAEEDA;color:#633806;}
 .bred{background:#FCEBEB;color:#791F1F;}.bgray{background:#F1EFE8;color:#444441;}
-.bgreen{background:#EAF3DE;color:#27500A;}
+.bgreen{background:#EAF3DE;color:#27500A;}.borange{background:#FEF3E8;color:#7A3A00;}
+.bpink{background:#FEE8F3;color:#7A0044;}
 @media(prefers-color-scheme:dark){
   .bpurple{background:#2a2460;color:#AFA9EC;}.bblue{background:#0a2a4a;color:#85B7EB;}
   .bteal{background:#0a2e24;color:#5DCAA5;}.bamber{background:#3a2a0a;color:#EF9F27;}
   .bred{background:#3a1010;color:#F09595;}.bgray{background:#2a2a28;color:#B4B2A9;}
-  .bgreen{background:#0a2a1a;color:#97C459;}
+  .bgreen{background:#0a2a1a;color:#97C459;}.borange{background:#3a1e00;color:#F5A623;}
+  .bpink{background:#3a0022;color:#F07ACC;}
 }
 .dchip{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;margin-top:2px;}
 .dchip.urg{color:var(--red);font-weight:600;}
@@ -71,14 +73,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .irow input{flex:1;min-width:100px;}
 .irow button{padding:8px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;}
 .irow button:disabled{opacity:.5;cursor:not-allowed;}
-.filter-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
-.ftab{padding:4px 11px;font-size:12px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
-.ftab.on{background:var(--blue);color:#fff;border-color:var(--blue);}
-.mcats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
-.mcat{padding:5px 12px;font-size:12px;border-radius:16px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
-.mcat.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+/* 情報収集メモ用 */
+.filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.ftag{padding:4px 11px;font-size:12px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
+.ftag.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+.info-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
+.info-body{flex:1;min-width:0;}
+.info-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.info-desc{font-size:11px;color:var(--text2);line-height:1.5;}
+.info-meta{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.info-date{font-size:10px;color:var(--text3);}
+.del{font-size:16px;cursor:pointer;color:var(--text3);flex-shrink:0;padding:0 2px;}
+.del:hover{color:var(--red);}
 .empty{text-align:center;padding:20px;color:var(--text3);font-size:13px;}
-.toast{position:fixed;bottom:calc(var(--tabbar) + 10px);left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast{position:fixed;bottom:calc(var(--tabbar)+10px);left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
 .toast.show{opacity:1;}
 </style>
 </head>
@@ -99,29 +107,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="metrics" id="m0"></div>
     <div class="two">
       <div>
-        <div class="shdr"><span class="stitle">今週のTODO</span><a class="nlink" href="https://www.notion.so/325112bb45a38161839fc593c658407d" target="_blank">Notionで開く</a></div>
-        <div class="card" id="week-list"></div>
-        <div class="shdr" style="margin-top:10px;"><span class="stitle">書類提出ステータス</span></div>
+        <div class="shdr"><span class="stitle">書類提出ステータス</span><a class="nlink" href="https://www.notion.so/325112bb45a38161839fc593c658407d" target="_blank">Notionで開く</a></div>
         <div class="card" id="doc-list"></div>
       </div>
       <div>
         <div class="shdr"><span class="stitle">重要日程</span></div>
         <div class="card" id="mile-list"></div>
-        <div class="shdr" style="margin-top:10px;"><span class="stitle">入社情報</span></div>
-        <div class="card">
-          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">会社名</span><span class="itxt">VMware 合同会社</span></div>
-          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">役職</span><span class="itxt">Senior Account Director</span></div>
-          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">担当者</span><span class="itxt">菅原育天さん</span></div>
-          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">入社日</span><span class="itxt">2026年6月1日</span></div>
-          <div class="row" style="border:none;"><span class="isub" style="width:68px;flex-shrink:0;">Workday</span><span class="badge bgreen">登録完了 3/18</span></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- Tab1: TODO -->
   <div class="pane" id="pane1">
-    <div class="filter-tabs" id="todo-filter"></div>
     <div class="two">
       <div>
         <div class="shdr"><span class="stitle">仕事のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
@@ -153,15 +150,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <!-- Tab2: 学習メモ -->
+  <!-- Tab2: 情報収集メモ -->
   <div class="pane" id="pane2">
-    <div class="mcats" id="mcats"></div>
-    <div id="memo-list"></div>
-    <div class="irow" style="margin-top:10px;">
-      <input id="m-en" type="text" placeholder="英語・用語" style="flex:1;" onkeydown="if(event.key==='Enter')addMemo()">
-      <input id="m-ja" type="text" placeholder="日本語・メモ" style="flex:1.4;" onkeydown="if(event.key==='Enter')addMemo()">
-      <select id="m-cat"><option>英語業務</option><option>VM製品</option><option>防衛省</option><option>Office</option></select>
-      <button onclick="addMemo()">追加</button>
+    <div class="shdr">
+      <span class="stitle">情報収集メモ</span>
+      <a class="nlink" href="https://www.notion.so/4822d54be75e4df0a3722cc407e67b46" target="_blank">Notionで管理</a>
+    </div>
+    <div class="filter-row" id="info-filters"></div>
+    <div id="info-list"></div>
+    <div class="card" style="margin-top:10px;">
+      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px;">新しい情報を追加</div>
+      <div class="irow">
+        <input id="info-title" type="text" placeholder="タイトル・件名" style="flex:2;" onkeydown="if(event.key==='Enter')addInfo()">
+        <select id="info-cat">
+          <option>競合情報</option><option>入札情報</option><option>製品知識</option>
+          <option>VM製品</option><option>業界動向</option><option>英語業務</option><option>Office操作</option>
+        </select>
+      </div>
+      <div class="irow" style="margin-top:6px;">
+        <input id="info-desc" type="text" placeholder="内容・メモ（任意）" style="flex:1;">
+        <select id="info-pri"><option>高</option><option selected>中</option><option>低</option></select>
+        <button id="btn-info" onclick="addInfo()">追加</button>
+      </div>
     </div>
   </div>
 
@@ -186,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- 下部タブバー -->
+<!-- タブバー -->
 <div class="tabbar">
   <button class="tbtn t0 on" onclick="sw(0)" id="tb0">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -198,14 +208,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </button>
   <button class="tbtn t2" onclick="sw(2)" id="tb2">
     <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-    <span>学習</span>
+    <span>情報収集</span>
   </button>
   <button class="tbtn t3" onclick="sw(3)" id="tb3">
     <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     <span>スケジュール</span>
   </button>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -213,15 +222,9 @@ const TOKEN  = 'ntn_V46092302432x0V2m9PzBKX1AekFAq3EFxDFvKgG9Sz1zZ';
 const PROXY  = 'https://notion-proxy.yosuke-nakamura-yg.workers.dev';
 const TASK_DB= 'dc754a0d-0b70-4775-82f4-e7b2fc8e3f73';
 const SCH_DB = '5abb5d37-3eb3-4b23-895d-7879a57618d4';
+const INFO_DB= 'ab97942d-5b0d-4025-9bac-031230b1448a';
 
 const FIXED={
-  weekTodos:[
-    {text:'上司に退職の意思を口頭で伝える（3/17済）',done:true},
-    {text:'就業規則で退職申告の必要期間を確認',done:false},
-    {text:'有給残日数を確認',done:false},
-    {text:'転職先HRに提出書類リストを最終確認',done:false},
-    {text:'卒業証明書（日本語・英文）を転職先に送付',done:true},
-  ],
   docs:[
     {name:'履歴書',status:'送付済み',ok:true},{name:'源泉徴収票',status:'送付済み',ok:true},
     {name:'卒業証明書（日本語）',status:'送付済み',ok:true},{name:'卒業証明書（英文）',status:'送付済み',ok:true},
@@ -241,59 +244,22 @@ const FIXED={
     {title:'退職日',date:'2026-05-30',urgent:false},
     {title:'入社日',date:'2026-06-01',urgent:false},
     {title:'DC年金 移換手続き',date:'2026-11-30',urgent:false},
-  ],
-  memos:[
-    {en:'Action items',ja:'会議後の宿題リスト',cat:'英語業務'},
-    {en:'MFA / 2FA',ja:'多要素認証 — 入社初日に設定必須',cat:'英語業務'},
-    {en:'Out of Office (OOO)',ja:'不在通知の自動返信メール',cat:'英語業務'},
-    {en:'Tentative',ja:'会議招待への「仮承諾」',cat:'英語業務'},
-    {en:'CC / BCC',ja:'CC=全員に見える、BCC=非公開の写し',cat:'英語業務'},
-    {en:'Inbox',ja:'受信トレイ',cat:'英語業務'},
-    {en:'Reply / Reply All',ja:'返信 / 全員に返信（Reply Allは注意）',cat:'英語業務'},
-    {en:'Draft',ja:'下書き',cat:'英語業務'},
-    {en:'Attachment',ja:'添付ファイル',cat:'英語業務'},
-    {en:'VCF（VMware Cloud Foundation）',ja:'VMware主力の統合プラットフォーム',cat:'VM製品'},
-    {en:'vSphere',ja:'仮想化基盤。ESXiホスト管理',cat:'VM製品'},
-    {en:'NSX',ja:'ネットワーク仮想化製品',cat:'VM製品'},
-    {en:'vSAN',ja:'ストレージ仮想化製品',cat:'VM製品'},
-    {en:'Aria（旧vRealize）',ja:'運用管理スイート',cat:'VM製品'},
-    {en:'防衛省調達',ja:'防衛省向け調達・入札の基礎知識',cat:'防衛省'},
-    {en:'秘密保全',ja:'セキュリティクリアランスの概念',cat:'防衛省'},
-    {en:'随意契約',ja:'競争なしの特命契約方式',cat:'防衛省'},
-    {en:'Save / Save As',ja:'上書き保存 Ctrl+S / 名前を付けて保存 Ctrl+Shift+S',cat:'Office'},
-    {en:'Track Changes',ja:'変更履歴の記録 Ctrl+Shift+E',cat:'Office'},
-    {en:'Paste Special',ja:'形式を選択して貼り付け Ctrl+Alt+V',cat:'Office'},
-    {en:'Undo / Redo',ja:'元に戻す Ctrl+Z / やり直す Ctrl+Y',cat:'Office'},
-    {en:'Format Painter',ja:'書式のコピー貼り付け（ブラシアイコン）',cat:'Office'},
   ]
 };
 
-const LS_KEY='portal_v4';
-function loadLS(){
-  try{
-    const d=localStorage.getItem(LS_KEY);
-    if(d) return JSON.parse(d);
-    // 旧バージョンからメモを引き継ぐ
-    const old=localStorage.getItem('portal_v3')||localStorage.getItem('portal_v2')||localStorage.getItem('yosuke_portal_v1');
-    if(old){
-      const parsed=JSON.parse(old);
-      if(parsed.memos&&parsed.memos.length>0) return {memos:parsed.memos};
-    }
-    return {memos:JSON.parse(JSON.stringify(FIXED.memos))};
-  }catch{return {memos:JSON.parse(JSON.stringify(FIXED.memos))};}
-}
-function saveLS(){try{localStorage.setItem(LS_KEY,JSON.stringify(LS));}catch{}}
-let LS=loadLS();
-// デフォルトメモがまだない場合は追加
-if(!LS.memos||LS.memos.length===0) LS.memos=JSON.parse(JSON.stringify(FIXED.memos));
-
 let nTasks={s:[],k:[],t:[]};
 let nScheds=[];
+let nInfos=[];
 
 const TODAY=new Date();TODAY.setHours(0,0,0,0);
 function daysUntil(d){const t=new Date(d);t.setHours(0,0,0,0);return Math.ceil((t-TODAY)/86400000);}
 function dlabel(d){const n=daysUntil(d);if(n<0)return '期限超過';if(n===0)return '今日';if(n===1)return '明日';const dt=new Date(d);return(dt.getMonth()+1)+'/'+(dt.getDate());}
-const catColor={仕事:'bblue',転職:'bpurple',個人:'bteal',英語業務:'bblue',VM製品:'bteal',防衛省:'bamber',Office:'bgray'};
+
+const catColor={
+  仕事:'bblue',転職:'bpurple',個人:'bteal',
+  競合情報:'bred',入札情報:'bblue',製品知識:'bteal',
+  VM製品:'bpurple',業界動向:'borange',英語業務:'bpink',Office操作:'bgray'
+};
 const priColor={高:'bred',中:'bamber',低:'bgray'};
 
 let toastTimer=null;
@@ -320,6 +286,7 @@ async function syncAll(){
   const btn=document.getElementById('sync-btn');
   dot.className='sdot spin';lbl.textContent='同期中…';btn.disabled=true;
   try{
+    // タスクDB
     const tr=await nFetch('/v1/databases/'+TASK_DB+'/query','POST',{page_size:100});
     const s=[],k=[],t=[];
     (tr.results||[]).forEach(p=>{
@@ -336,6 +303,7 @@ async function syncAll(){
     });
     nTasks={s,k,t};
 
+    // スケジュールDB
     const sr=await nFetch('/v1/databases/'+SCH_DB+'/query','POST',{page_size:50});
     nScheds=(sr.results||[]).map(p=>{
       const pr=p.properties;
@@ -344,6 +312,23 @@ async function syncAll(){
       const cat=pr['カテゴリ']?.select?.name||'仕事';
       return title&&date?{title,date,cat,id:p.id}:null;
     }).filter(Boolean).sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+    // 情報収集メモDB
+    const ir=await nFetch('/v1/databases/'+INFO_DB+'/query','POST',{
+      page_size:50,
+      sorts:[{property:'収集日',direction:'descending'},{timestamp:'created_time',direction:'descending'}]
+    });
+    nInfos=(ir.results||[]).map(p=>{
+      const pr=p.properties;
+      const title=(pr['用語']?.title||[]).map(x=>x.plain_text).join('');
+      if(!title)return null;
+      const desc=(pr['説明']?.rich_text||[]).map(x=>x.plain_text).join('');
+      const cat=pr['情報種別']?.select?.name||'製品知識';
+      const pri=pr['重要度']?.select?.name||'中';
+      const sent=pr['発信済み']?.checkbox||false;
+      const date=pr['収集日']?.date?.start||'';
+      return {title,desc,cat,pri,sent,date,id:p.id};
+    }).filter(Boolean);
 
     dot.className='sdot';lbl.textContent='Notionと同期';
     const now=new Date();
@@ -377,9 +362,7 @@ async function addTask(cat){
       }
     });
     nTasks[key].unshift({text:val,done:false,pri,id:res.id});
-    inp.value='';
-    toast('Notionにタスクを追加しました');
-    renderTasks();
+    inp.value='';toast('Notionにタスクを追加しました');renderTasks();
   }catch(e){toast('追加失敗: '+e.message,4000);}
   btn.disabled=false;btn.textContent='追加';
 }
@@ -394,12 +377,52 @@ async function toggleTask(key,idx){
       properties:{'ステータス':{select:{name:newDone?'完了 🙌':'未着手'}}}
     });
     nTasks[key][idx].done=newDone;
-    toast(newDone?'完了にしました':'未着手に戻しました');
-    renderTasks();
+    toast(newDone?'完了にしました':'未着手に戻しました');renderTasks();
   }catch(e){
-    toast('更新失敗: '+e.message,4000);
+    toast('更新失敗',4000);
     if(chk)chk.classList.remove('loading');
   }
+}
+
+async function addInfo(){
+  const title=document.getElementById('info-title').value.trim();
+  const desc=document.getElementById('info-desc').value.trim();
+  const cat=document.getElementById('info-cat').value;
+  const pri=document.getElementById('info-pri').value;
+  if(!title)return;
+  const btn=document.getElementById('btn-info');
+  btn.disabled=true;btn.textContent='追加中…';
+  const today=new Date().toISOString().split('T')[0];
+  try{
+    const res=await nFetch('/v1/pages','POST',{
+      parent:{database_id:INFO_DB},
+      properties:{
+        '用語':{title:[{text:{content:title}}]},
+        '説明':{rich_text:[{text:{content:desc}}]},
+        '情報種別':{select:{name:cat}},
+        '重要度':{select:{name:pri}},
+        '発信済み':{checkbox:false},
+        '収集日':{date:{start:today}}
+      }
+    });
+    nInfos.unshift({title,desc,cat,pri,sent:false,date:today,id:res.id});
+    document.getElementById('info-title').value='';
+    document.getElementById('info-desc').value='';
+    toast('Notionに情報を追加しました');renderInfos();
+  }catch(e){toast('追加失敗: '+e.message,4000);}
+  btn.disabled=false;btn.textContent='追加';
+}
+
+async function toggleSent(idx){
+  const info=nInfos[idx];
+  const newSent=!info.sent;
+  try{
+    await nFetch('/v1/pages/'+info.id,'PATCH',{
+      properties:{'発信済み':{checkbox:newSent}}
+    });
+    nInfos[idx].sent=newSent;
+    toast(newSent?'発信済みにしました':'未発信に戻しました');renderInfos();
+  }catch(e){toast('更新失敗',4000);}
 }
 
 async function addSch(){
@@ -422,8 +445,7 @@ async function addSch(){
     nScheds.push({title:t,date:d,cat:c,id:res.id});
     nScheds.sort((a,b)=>new Date(a.date)-new Date(b.date));
     document.getElementById('sch-t').value='';
-    toast('Notionにスケジュールを追加しました');
-    renderSch();
+    toast('Notionにスケジュールを追加しました');renderSch();
   }catch(e){toast('追加失敗: '+e.message,4000);}
   btn.disabled=false;btn.textContent='追加';
 }
@@ -434,16 +456,13 @@ function sw(i){
 }
 
 function renderMetrics(){
-  const wDone=FIXED.weekTodos.filter(x=>x.done).length;
+  const dIn=Math.max(0,daysUntil('2026-06-01'));
+  const dQ=Math.max(0,daysUntil('2026-05-30'));
+  const docOk=FIXED.docs.filter(d=>d.ok).length;
   document.getElementById('m0').innerHTML=`
-    <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${Math.max(0,daysUntil('2026-06-01'))}</div><div class="msub">日</div></div>
-    <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${Math.max(0,daysUntil('2026-05-30'))}</div><div class="msub">日</div></div>
-    <div class="metric"><div class="mlabel">書類提出</div><div class="mval">${FIXED.docs.filter(d=>d.ok).length}</div><div class="msub">/ ${FIXED.docs.length}件</div></div>
-    <div class="metric"><div class="mlabel">今週TODO</div><div class="mval">${wDone}</div><div class="msub">/ ${FIXED.weekTodos.length}完了</div></div>`;
-}
-function renderWeek(){
-  document.getElementById('week-list').innerHTML=FIXED.weekTodos.map(x=>`
-    <div class="row"><div class="chk ${x.done?'done':''}"></div><span class="itxt ${x.done?'done':''}">${x.text}</span></div>`).join('');
+    <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${dIn}</div><div class="msub">日</div></div>
+    <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${dQ}</div><div class="msub">日</div></div>
+    <div class="metric"><div class="mlabel">書類提出</div><div class="mval">${docOk}</div><div class="msub">/ ${FIXED.docs.length}件</div></div>`;
 }
 function renderDocs(){
   document.getElementById('doc-list').innerHTML=FIXED.docs.map(d=>`
@@ -455,9 +474,9 @@ function renderMilestones(){
 }
 
 function renderTasks(){
-  const keyMap={s:'task-s',k:'task-k',t:'task-t'};
-  Object.entries(keyMap).forEach(([key,id])=>{
+  ['s','k','t'].forEach(key=>{
     const arr=nTasks[key];
+    const id='task-'+key;
     document.getElementById(id).innerHTML=arr.length
       ?arr.map((x,i)=>`
         <div class="row">
@@ -469,34 +488,28 @@ function renderTasks(){
   });
 }
 
-let memoFilter='all';
-function renderMemoCats(){
-  document.getElementById('mcats').innerHTML=['all','英語業務','VM製品','防衛省','Office'].map(c=>`
-    <button class="mcat ${memoFilter===c?'on':''}" onclick="memoFilter='${c}';renderMemoCats();renderMemos();">${c==='all'?'すべて':c}</button>`).join('');
+let infoFilter='all';
+function renderInfoFilters(){
+  const cats=['all','競合情報','入札情報','製品知識','VM製品','業界動向','英語業務','Office操作'];
+  document.getElementById('info-filters').innerHTML=cats.map(c=>`
+    <button class="ftag ${infoFilter===c?'on':''}" onclick="infoFilter='${c}';renderInfoFilters();renderInfos();">${c==='all'?'すべて':c}</button>`).join('');
 }
-function renderMemos(){
-  const list=memoFilter==='all'?LS.memos:LS.memos.filter(m=>m.cat===memoFilter);
-  document.getElementById('memo-list').innerHTML=list.length
-    ?list.map(m=>{const i=LS.memos.indexOf(m);return`
-      <div class="card" style="padding:10px 14px;margin-bottom:7px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:500;color:var(--text);">${m.en}</div>
-          <div class="isub">${m.ja}</div>
+function renderInfos(){
+  const list=infoFilter==='all'?nInfos:nInfos.filter(x=>x.cat===infoFilter);
+  if(!list.length){document.getElementById('info-list').innerHTML='<div class="empty">Notionと同期してください</div>';return;}
+  document.getElementById('info-list').innerHTML=list.map((x,i)=>`
+    <div class="info-card">
+      <div class="info-body">
+        <div class="info-title">${x.title}</div>
+        ${x.desc?`<div class="info-desc">${x.desc}</div>`:''}
+        <div class="info-meta">
+          <span class="badge ${catColor[x.cat]||'bgray'}">${x.cat}</span>
+          <span class="badge ${priColor[x.pri]||'bgray'}">${x.pri}</span>
+          ${x.date?`<span class="info-date">${x.date.slice(5).replace('-','/')}</span>`:''}
+          <button style="font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid var(--border2);background:${x.sent?'var(--green)':'var(--bg2)'};color:${x.sent?'#fff':'var(--text2)'};cursor:pointer;" onclick="toggleSent(${nInfos.indexOf(x)})">${x.sent?'✓ 発信済み':'未発信'}</button>
         </div>
-        <span class="badge ${catColor[m.cat]||'bgray'}">${m.cat}</span>
-        <span style="font-size:16px;cursor:pointer;color:var(--text3);padding:0 2px;" onclick="LS.memos.splice(${i},1);saveLS();renderMemos();">×</span>
-      </div>`;}).join('')
-    :'<div class="empty">メモなし</div>';
-}
-function addMemo(){
-  const en=document.getElementById('m-en').value.trim();
-  const ja=document.getElementById('m-ja').value.trim();
-  const cat=document.getElementById('m-cat').value;
-  if(!en)return;
-  LS.memos.unshift({en,ja,cat});
-  document.getElementById('m-en').value='';
-  document.getElementById('m-ja').value='';
-  saveLS();renderMemos();toast('メモを追加しました');
+      </div>
+    </div>`).join('');
 }
 
 function renderSch(){
@@ -512,7 +525,12 @@ function renderSch(){
     <div class="row"><div class="itxt">${d.title}</div><span class="dchip ${d.urgent?'urg':''}">${dlabel(d.date)}</span></div>`).join('');
 }
 
-function renderAll(){renderMetrics();renderWeek();renderDocs();renderMilestones();renderTasks();renderMemoCats();renderMemos();renderSch();}
+function renderAll(){
+  renderMetrics();renderDocs();renderMilestones();
+  renderTasks();
+  renderInfoFilters();renderInfos();
+  renderSch();
+}
 
 function init(){
   const d=new Date();
