@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="マイポータル">
+<title>マイポータル</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f4;
+    --bg3: #f0efee;
+    --text: #1a1a18;
+    --text2: #6b6b67;
+    --text3: #9c9a92;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --accent-purple: #534AB7;
+    --accent-blue: #185FA5;
+    --accent-teal: #0F6E56;
+    --accent-amber: #854F0B;
+    --green: #1D9E75;
+    --red: #A32D2D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #242422;
+      --bg3: #2a2a28;
+      --text: #e8e6de;
+      --text2: #9c9a92;
+      --text3: #6b6b67;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.18);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); font-size: 14px; min-height: 100vh; }
+  .app { max-width: 900px; margin: 0 auto; padding: 12px; }
+
+  /* Header */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 0 12px; gap: 8px; flex-wrap: wrap; }
+  .header-title { font-size: 16px; font-weight: 600; color: var(--text); }
+  .header-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .sync-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); font-size: 12px; cursor: pointer; transition: background .15s; }
+  .sync-btn:hover { background: var(--bg2); }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+  .sync-dot.spin { background: #EF9F27; animation: pulse .7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tab { padding: 7px 14px; font-size: 13px; border-radius: 22px; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); cursor: pointer; transition: all .15s; font-weight: 400; }
+  .tab:hover { background: var(--bg2); }
+  .tab.on { color: #fff; border-color: transparent; font-weight: 500; }
+  .tab.t0.on { background: var(--accent-purple); }
+  .tab.t1.on { background: var(--accent-blue); }
+  .tab.t2.on { background: var(--accent-teal); }
+  .tab.t3.on { background: var(--accent-amber); }
+
+  /* Pane */
+  .pane { display: none; }
+  .pane.on { display: block; }
+
+  /* Metrics */
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 14px; }
+  .metric { background: var(--bg); border-radius: 12px; padding: 12px; border: 1px solid var(--border); }
+  .mlabel { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .mval { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1.1; }
+  .msub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+
+  /* Grid */
+  .two { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  @media (max-width: 600px) { .two { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2,1fr); } }
+
+  /* Cards */
+  .card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+  .shdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .stitle { font-size: 13px; font-weight: 600; color: var(--text); }
+  .nlink { font-size: 11px; color: var(--accent-blue); text-decoration: none; padding: 3px 8px; border-radius: 8px; border: 1px solid rgba(24,95,165,0.3); }
+  .nlink:hover { background: rgba(24,95,165,0.08); }
+
+  /* Row items */
+  .row { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .row:last-child { border-bottom: none; }
+  .chk { width: 17px; height: 17px; border-radius: 5px; border: 1.5px solid var(--border2); cursor: pointer; flex-shrink: 0; margin-top: 0px; display: flex; align-items: center; justify-content: center; background: var(--bg); transition: all .15s; }
+  .chk.done { background: var(--green); border-color: var(--green); }
+  .chk.done::after { content: ''; display: block; width: 8px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateY(-1px); }
+  .itxt { font-size: 13px; color: var(--text); line-height: 1.45; flex: 1; min-width: 0; }
+  .itxt.done { text-decoration: line-through; color: var(--text3); }
+  .isub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .del { font-size: 16px; cursor: pointer; color: var(--text3); flex-shrink: 0; line-height: 1; padding: 0 2px; transition: color .1s; }
+  .del:hover { color: var(--red); }
+
+  /* Badges */
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+  .bpurple { background: #EEEDFE; color: #3C3489; }
+  .bblue { background: #E6F1FB; color: #0C447C; }
+  .bteal { background: #E1F5EE; color: #085041; }
+  .bamber { background: #FAEEDA; color: #633806; }
+  .bred { background: #FCEBEB; color: #791F1F; }
+  .bgray { background: #F1EFE8; color: #444441; }
+  .bgreen { background: #EAF3DE; color: #27500A; }
+  @media (prefers-color-scheme: dark) {
+    .bpurple { background: #2a2460; color: #AFA9EC; }
+    .bblue { background: #0a2a4a; color: #85B7EB; }
+    .bteal { background: #0a2e24; color: #5DCAA5; }
+    .bamber { background: #3a2a0a; color: #EF9F27; }
+    .bred { background: #3a1010; color: #F09595; }
+    .bgray { background: #2a2a28; color: #B4B2A9; }
+    .bgreen { background: #0a2a1a; color: #97C459; }
+  }
+
+  /* Date chips */
+  .dchip { font-size: 11px; color: var(--text3); white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .dchip.urg { color: var(--red); font-weight: 600; }
+
+  /* Input rows */
+  .irow { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .irow input, .irow select { padding: 8px 10px; border: 1px solid var(--border2); border-radius: 10px; background: var(--bg); color: var(--text); font-size: 13px; outline: none; transition: border-color .15s; }
+  .irow input:focus, .irow select:focus { border-color: var(--accent-blue); }
+  .irow input { flex: 1; min-width: 100px; }
+  .irow select { flex-shrink: 0; }
+  .irow button { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13px; cursor: pointer; flex-shrink: 0; transition: background .15s; }
+  .irow button:hover { background: var(--bg3); }
+
+  /* Memo cats */
+  .mcats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .mcat { padding: 5px 12px; font-size: 12px; border-radius: 16px; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); cursor: pointer; transition: all .15s; }
+  .mcat.on { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+  .mcat:hover:not(.on) { background: var(--bg2); }
+
+  /* Progress bar */
+  .pbar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; flex: 1; }
+  .pfill { height: 100%; border-radius: 2px; background: var(--green); transition: width .3s; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 20px; color: var(--text3); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="header-title">マイポータル</div>
+      <div class="header-sub" id="today-label"></div>
+    </div>
+    <button class="sync-btn" onclick="openNotion()">
+      <span class="sync-dot" id="sdot"></span>
+      <span id="slbl">Notionを開く</span>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab t0 on" onclick="sw(0)">Broadcom準備</button>
+    <button class="tab t1" onclick="sw(1)">TODO</button>
+    <button class="tab t2" onclick="sw(2)">学習メモ</button>
+    <button class="tab t3" onclick="sw(3)">スケジュール</button>
+  </div>
+
+  <!-- Tab 0: Broadcom準備 -->
+  <div class="pane on" id="pane0">
+    <div class="metrics" id="m0"></div>
+    <div class="two">
+      <div>
+        <div class="shdr"><span class="stitle">今週のTODO</span><a class="nlink" href="https://www.notion.so/325112bb45a38161839fc593c658407d" target="_blank">Notionで開く</a></div>
+        <div class="card" id="week-list"></div>
+        <div class="shdr" style="margin-top:10px;"><span class="stitle">書類提出ステータス</span></div>
+        <div class="card" id="doc-list"></div>
+      </div>
+      <div>
+        <div class="shdr"><span class="stitle">重要日程</span></div>
+        <div class="card" id="mile-list"></div>
+        <div class="shdr" style="margin-top:10px;"><span class="stitle">入社情報</span></div>
+        <div class="card">
+          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">会社名</span><span class="itxt">VMware 合同会社</span></div>
+          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">役職</span><span class="itxt">Senior Account Director</span></div>
+          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">担当者</span><span class="itxt">菅原育天さん</span></div>
+          <div class="row"><span class="isub" style="width:68px;flex-shrink:0;">入社日</span><span class="itxt">2026年6月1日</span></div>
+          <div class="row" style="border:none;"><span class="isub" style="width:68px;flex-shrink:0;">Workday</span><span class="badge bgreen">登録完了 3/18</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 1: TODO -->
+  <div class="pane" id="pane1">
+    <div class="two">
+      <div>
+        <div class="shdr"><span class="stitle">仕事のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
+        <div class="card" id="task-shigoto"></div>
+        <div class="irow">
+          <input id="ni-s" type="text" placeholder="仕事タスクを追加…" onkeydown="if(event.key==='Enter')addTask('s')">
+          <select id="pri-s"><option>高</option><option selected>中</option><option>低</option></select>
+          <button onclick="addTask('s')">追加</button>
+        </div>
+      </div>
+      <div>
+        <div class="shdr"><span class="stitle">個人のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
+        <div class="card" id="task-kojin"></div>
+        <div class="irow">
+          <input id="ni-k" type="text" placeholder="個人タスクを追加…" onkeydown="if(event.key==='Enter')addTask('k')">
+          <select id="pri-k"><option>高</option><option selected>中</option><option>低</option></select>
+          <button onclick="addTask('k')">追加</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: 学習メモ -->
+  <div class="pane" id="pane2">
+    <div class="mcats" id="mcats"></div>
+    <div id="memo-list"></div>
+    <div class="irow" style="margin-top:10px;">
+      <input id="m-en" type="text" placeholder="英語・用語" style="flex:1;" onkeydown="if(event.key==='Enter')addMemo()">
+      <input id="m-ja" type="text" placeholder="日本語・メモ" style="flex:1.4;" onkeydown="if(event.key==='Enter')addMemo()">
+      <select id="m-cat"><option>英語業務</option><option>VM製品</option><option>防衛省</option><option>Office</option></select>
+      <button onclick="addMemo()">追加</button>
+    </div>
+  </div>
+
+  <!-- Tab 3: スケジュール -->
+  <div class="pane" id="pane3">
+    <div class="two">
+      <div>
+        <div class="shdr"><span class="stitle">直近の予定</span><a class="nlink" href="https://www.notion.so/5abb5d373eb34b23895d7879a57618d4" target="_blank">Notionで管理</a></div>
+        <div class="card" id="sch-list"></div>
+        <div class="irow">
+          <input id="sch-t" type="text" placeholder="予定タイトル…" onkeydown="if(event.key==='Enter')addSch()">
+          <input id="sch-d" type="date" style="flex-shrink:0;width:130px;">
+          <select id="sch-c" style="flex-shrink:0;"><option>仕事</option><option>転職</option><option>個人</option></select>
+          <button onclick="addSch()">追加</button>
+        </div>
+      </div>
+      <div>
+        <div class="shdr"><span class="stitle">締切・マイルストーン</span></div>
+        <div class="card" id="dead-list"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── データ定義 ──────────────────────────────
+const DEFAULTS = {
+  weekTodos:[
+    {text:'上司に退職の意思を口頭で伝える（3/17済）',done:true},
+    {text:'就業規則で退職申告の必要期間を確認',done:false},
+    {text:'有給残日数を確認',done:false},
+    {text:'転職先HRに提出書類リストを最終確認',done:false},
+    {text:'卒業証明書（日本語・英文）を転職先に送付',done:true},
+  ],
+  docs:[
+    {name:'履歴書',status:'送付済み',ok:true},
+    {name:'源泉徴収票',status:'送付済み',ok:true},
+    {name:'卒業証明書（日本語）',status:'送付済み',ok:true},
+    {name:'卒業証明書（英文）',status:'送付済み',ok:true},
+    {name:'オファーレター',status:'3月末受取予定',ok:false},
+    {name:'退職届',status:'準備中',ok:false},
+    {name:'身元保証書',status:'未着手',ok:false},
+  ],
+  milestones:[
+    {title:'退職申告 期限確認',date:'2026-03-25',urgent:true},
+    {title:'オファーレター 受取・署名',date:'2026-03-31',urgent:true},
+    {title:'退職届 提出',date:'2026-04-10',urgent:false},
+    {title:'退職日',date:'2026-05-30',urgent:false},
+    {title:'VMware 入社日',date:'2026-06-01',urgent:false},
+  ],
+  tasks:{
+    s:[
+      {text:'都庁 定例会議 資料準備',done:false,pri:'高'},
+      {text:'1G/2G 異動シミュレーション更新',done:false,pri:'中'},
+      {text:'部下 1on1 メモ整理',done:true,pri:'低'},
+    ],
+    k:[
+      {text:'有給残日数の確認',done:false,pri:'高'},
+      {text:'DC年金 移換先の調査',done:false,pri:'中'},
+      {text:'Workday登録内容の最終確認',done:true,pri:'低'},
+    ]
+  },
+  memos:[
+    {en:'Action items',ja:'会議後の宿題リスト',cat:'英語業務'},
+    {en:'MFA / 2FA',ja:'多要素認証 — 入社初日に設定必須',cat:'英語業務'},
+    {en:'Out of Office (OOO)',ja:'不在通知の自動返信メール',cat:'英語業務'},
+    {en:'Tentative',ja:'会議招待への「仮承諾」',cat:'英語業務'},
+    {en:'CC / BCC',ja:'CC=全員に見える、BCC=非公開の写し',cat:'英語業務'},
+    {en:'VCF（VMware Cloud Foundation）',ja:'VMware主力の統合プラットフォーム',cat:'VM製品'},
+    {en:'vSphere',ja:'仮想化基盤。ESXiホスト管理',cat:'VM製品'},
+    {en:'NSX',ja:'ネットワーク仮想化製品',cat:'VM製品'},
+    {en:'vSAN',ja:'ストレージ仮想化製品',cat:'VM製品'},
+    {en:'Aria（旧vRealize）',ja:'運用管理スイート',cat:'VM製品'},
+    {en:'防衛省調達',ja:'防衛省向け調達・入札の基礎知識',cat:'防衛省'},
+    {en:'秘密保全',ja:'セキュリティクリアランスの概念',cat:'防衛省'},
+    {en:'随意契約',ja:'競争なしの特命契約方式',cat:'防衛省'},
+    {en:'Save / Save As',ja:'上書き保存 Ctrl+S / 名前を付けて保存 Ctrl+Shift+S',cat:'Office'},
+    {en:'Track Changes',ja:'変更履歴の記録 Ctrl+Shift+E',cat:'Office'},
+    {en:'Paste Special',ja:'形式を選択して貼り付け Ctrl+Alt+V',cat:'Office'},
+  ],
+  scheds:[
+    {title:'都庁 定例会議',date:'2026-03-25',cat:'仕事'},
+    {title:'退職申告 期限確認',date:'2026-03-28',cat:'転職'},
+    {title:'オファーレター 期限',date:'2026-03-31',cat:'転職'},
+  ],
+  deadlines:[
+    {title:'オファーレター 署名・返送',date:'2026-03-31',urgent:true},
+    {title:'退職届 提出',date:'2026-04-10',urgent:false},
+    {title:'退職日',date:'2026-05-30',urgent:false},
+    {title:'入社日',date:'2026-06-01',urgent:false},
+    {title:'DC年金 移換手続き',date:'2026-11-30',urgent:false},
+  ]
+};
+
+// ── LocalStorage ───────────────────────────
+const KEY = 'yosuke_portal_v1';
+function loadData(){
+  try { const d=localStorage.getItem(KEY); return d?JSON.parse(d):JSON.parse(JSON.stringify(DEFAULTS)); }
+  catch { return JSON.parse(JSON.stringify(DEFAULTS)); }
+}
+function saveData(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch{} }
+let S = loadData();
+
+// ── ユーティリティ ────────────────────────
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+function daysUntil(d){ const t=new Date(d); t.setHours(0,0,0,0); return Math.ceil((t-TODAY)/86400000); }
+function dlabel(d){ const n=daysUntil(d); if(n<0)return '期限超過'; if(n===0)return '今日'; if(n===1)return '明日'; const dt=new Date(d); return(dt.getMonth()+1)+'/'+(dt.getDate()); }
+const catColor={仕事:'bblue',転職:'bpurple',個人:'bteal',英語業務:'bblue',VM製品:'bteal',防衛省:'bamber',Office:'bgray'};
+const priColor={高:'bred',中:'bamber',低:'bgray'};
+
+// ── Tab切り替え ───────────────────────────
+let currentTab = 0;
+function sw(i){
+  currentTab = i;
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+}
+
+// ── Tab0 レンダリング ─────────────────────
+function renderMetrics(){
+  const wDone=S.weekTodos.filter(t=>t.done).length;
+  const dIn=Math.max(0,daysUntil('2026-06-01'));
+  const dQ=Math.max(0,daysUntil('2026-05-30'));
+  document.getElementById('m0').innerHTML=`
+    <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${dIn}</div><div class="msub">日</div></div>
+    <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${dQ}</div><div class="msub">日</div></div>
+    <div class="metric"><div class="mlabel">書類提出</div><div class="mval">${S.docs.filter(d=>d.ok).length}</div><div class="msub">/ ${S.docs.length}件</div></div>
+    <div class="metric"><div class="mlabel">今週TODO</div><div class="mval">${wDone}</div><div class="msub">/ ${S.weekTodos.length}完了</div></div>`;
+}
+function renderWeek(){
+  document.getElementById('week-list').innerHTML = S.weekTodos.length
+    ? S.weekTodos.map((t,i)=>`
+      <div class="row">
+        <div class="chk ${t.done?'done':''}" onclick="S.weekTodos[${i}].done=!S.weekTodos[${i}].done;saveData();renderWeek();renderMetrics();"></div>
+        <span class="itxt ${t.done?'done':''}">${t.text}</span>
+      </div>`).join('')
+    : '<div class="empty">タスクなし</div>';
+}
+function renderDocs(){
+  document.getElementById('doc-list').innerHTML = S.docs.map(d=>`
+    <div class="row">
+      <span class="itxt">${d.name}</span>
+      <span class="badge ${d.ok?'bgreen':'bamber'}">${d.status}</span>
+    </div>`).join('');
+}
+function renderMilestones(){
+  document.getElementById('mile-list').innerHTML = [...S.milestones]
+    .sort((a,b)=>new Date(a.date)-new Date(b.date))
+    .map(m=>`
+      <div class="row">
+        <span class="itxt">${m.title}</span>
+        <span class="dchip ${m.urgent?'urg':''}">${dlabel(m.date)}</span>
+      </div>`).join('');
+}
+
+// ── Tab1 レンダリング ─────────────────────
+function renderTasks(){
+  ['s','k'].forEach(k=>{
+    const id = k==='s'?'task-shigoto':'task-kojin';
+    const arr = S.tasks[k]||[];
+    document.getElementById(id).innerHTML = arr.length
+      ? arr.map((t,i)=>`
+        <div class="row">
+          <div class="chk ${t.done?'done':''}" onclick="S.tasks['${k}'][${i}].done=!S.tasks['${k}'][${i}].done;saveData();renderTasks();"></div>
+          <div style="flex:1;min-width:0;"><div class="itxt ${t.done?'done':''}">${t.text}</div></div>
+          <span class="badge ${priColor[t.pri]||'bgray'}">${t.pri}</span>
+          <span class="del" onclick="S.tasks['${k}'].splice(${i},1);saveData();renderTasks();">×</span>
+        </div>`).join('')
+      : '<div class="empty">タスクなし</div>';
+  });
+}
+function addTask(k){
+  const v=document.getElementById('ni-'+k).value.trim();
+  const p=document.getElementById('pri-'+k).value;
+  if(!v)return;
+  if(!S.tasks[k])S.tasks[k]=[];
+  S.tasks[k].unshift({text:v,done:false,pri:p});
+  document.getElementById('ni-'+k).value='';
+  saveData(); renderTasks();
+}
+
+// ── Tab2 レンダリング ─────────────────────
+let memoFilter='all';
+function renderMemoCats(){
+  const cats=['all','英語業務','VM製品','防衛省','Office'];
+  const labels={all:'すべて'};
+  document.getElementById('mcats').innerHTML = cats.map(c=>`
+    <button class="mcat ${memoFilter===c?'on':''}" onclick="memoFilter='${c}';renderMemoCats();renderMemos();">${labels[c]||c}</button>`).join('');
+}
+function renderMemos(){
+  const list = memoFilter==='all' ? S.memos : S.memos.filter(m=>m.cat===memoFilter);
+  document.getElementById('memo-list').innerHTML = list.length
+    ? list.map(m=>{
+        const i=S.memos.indexOf(m);
+        return `<div class="card" style="padding:10px 14px;margin-bottom:7px;display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:500;color:var(--text);">${m.en}</div>
+            <div class="isub">${m.ja}</div>
+          </div>
+          <span class="badge ${catColor[m.cat]||'bgray'}">${m.cat}</span>
+          <span class="del" onclick="S.memos.splice(${i},1);saveData();renderMemos();">×</span>
+        </div>`;}).join('')
+    : '<div class="empty">メモなし</div>';
+}
+function addMemo(){
+  const en=document.getElementById('m-en').value.trim();
+  const ja=document.getElementById('m-ja').value.trim();
+  const cat=document.getElementById('m-cat').value;
+  if(!en)return;
+  S.memos.unshift({en,ja,cat});
+  document.getElementById('m-en').value='';
+  document.getElementById('m-ja').value='';
+  saveData(); renderMemos();
+}
+
+// ── Tab3 レンダリング ─────────────────────
+function renderSch(){
+  const sorted=[...S.scheds].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('sch-list').innerHTML = sorted.length
+    ? sorted.map((sch)=>{
+        const i=S.scheds.indexOf(sch);
+        return `<div class="row">
+          <div class="itxt">${sch.title}</div>
+          <span class="badge ${catColor[sch.cat]||'bgray'}">${sch.cat}</span>
+          <span class="dchip">${dlabel(sch.date)}</span>
+          <span class="del" onclick="S.scheds.splice(${i},1);saveData();renderSch();">×</span>
+        </div>`;}).join('')
+    : '<div class="empty">予定なし</div>';
+
+  document.getElementById('dead-list').innerHTML = [...S.deadlines]
+    .sort((a,b)=>new Date(a.date)-new Date(b.date))
+    .map(d=>`
+      <div class="row">
+        <div class="itxt">${d.title}</div>
+        <span class="dchip ${d.urgent?'urg':''}">${dlabel(d.date)}</span>
+      </div>`).join('');
+}
+function addSch(){
+  const t=document.getElementById('sch-t').value.trim();
+  const d=document.getElementById('sch-d').value;
+  const c=document.getElementById('sch-c').value;
+  if(!t||!d)return;
+  S.scheds.push({title:t,date:d,cat:c});
+  document.getElementById('sch-t').value='';
+  saveData(); renderSch();
+}
+
+// ── Notion連携 ────────────────────────────
+function openNotion(){
+  window.open('https://www.notion.so/32b112bb45a381fcacdfe040ad4a2743','_blank');
+}
+
+// ── 今日の日付 ────────────────────────────
+function setDateLabel(){
+  const d=new Date();
+  const label=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
+  document.getElementById('today-label').textContent=label;
+}
+
+// ── 初期化 ────────────────────────────────
+function init(){
+  setDateLabel();
+  document.getElementById('sch-d').valueAsDate=new Date();
+  renderMetrics(); renderWeek(); renderDocs(); renderMilestones();
+  renderTasks();
+  renderMemoCats(); renderMemos();
+  renderSch();
+}
+init();
+</script>
+</body>
+</html>
