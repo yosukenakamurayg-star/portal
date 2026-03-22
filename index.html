@@ -885,14 +885,13 @@ let scheduleItems = [];
 async function loadSchedule() {
   try {
     const results = await notionQuery(DB_SCH, null, [
-      { property: '日時', direction: 'ascending' }
+      { property: '日付', direction: 'ascending' }
     ]);
     scheduleItems = results.map(r => ({
       id:    r.id,
       title: r.properties.タイトル?.title?.[0]?.plain_text
            || r.properties.Name?.title?.[0]?.plain_text || '（無題）',
-      date:  r.properties.日時?.date?.start
-           || r.properties.日付?.date?.start || '',
+      date:  r.properties.日付?.date?.start || '',
       cat:   r.properties.カテゴリ?.select?.name || '仕事',
     }));
     renderSchedule();
@@ -927,7 +926,7 @@ async function addSchedule() {
       タイトル: { title: [{ text: { content: title } }] },
       カテゴリ: { select: { name: cat } },
     };
-    if (date) props.日時 = { date: { start: date } };
+    if (date) props.日付 = { date: { start: date } };
     await notionCreate(DB_SCH, props);
     document.getElementById('sch-title').value = '';
     document.getElementById('sch-date').value  = '';
