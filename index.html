@@ -2,544 +2,1193 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="マイポータル">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>マイポータル</title>
 <style>
-:root{--bg:#fff;--bg2:#f5f5f4;--bg3:#f0efee;--text:#1a1a18;--text2:#6b6b67;--text3:#9c9a92;--border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);--purple:#534AB7;--blue:#185FA5;--teal:#0F6E56;--amber:#854F0B;--green:#1D9E75;--red:#A32D2D;--tabbar:56px;}
-@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#242422;--bg3:#2a2a28;--text:#e8e6de;--text2:#9c9a92;--text3:#6b6b67;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);}}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh;padding-bottom:var(--tabbar);}
-.app{max-width:900px;margin:0 auto;padding:12px 12px 0;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 10px;gap:8px;flex-wrap:wrap;}
-.htitle{font-size:16px;font-weight:600;}.hsub{font-size:11px;color:var(--text3);margin-top:1px;}
-.hbtns{display:flex;gap:6px;align-items:center;}
-.syncinfo{font-size:11px;color:var(--text3);}
-.btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);font-size:12px;cursor:pointer;}
-.btn:disabled{opacity:.6;cursor:not-allowed;}
-.sdot{width:7px;height:7px;border-radius:50%;background:var(--green);}
-.sdot.spin{background:#EF9F27;animation:pulse .7s ease-in-out infinite;}
-.sdot.err{background:var(--red);}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-/* タブバー */
-.tabbar{position:fixed;bottom:0;left:0;right:0;height:var(--tabbar);background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;}
-.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);font-size:10px;padding:4px 0;border:none;background:none;}
-.tbtn.on{color:var(--purple);}
-.tbtn.on.t1{color:var(--blue);}
-.tbtn.on.t2{color:var(--teal);}
-.tbtn.on.t3{color:var(--amber);}
-.tbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-.pane{display:none;}.pane.on{display:block;}
-/* メトリクス */
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px;}
-.metric{background:var(--bg);border-radius:12px;padding:12px;border:1px solid var(--border);}
-.mlabel{font-size:11px;color:var(--text3);margin-bottom:2px;}
-.mval{font-size:24px;font-weight:600;color:var(--text);line-height:1.1;}
-.msub{font-size:11px;color:var(--text3);}
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
-@media(max-width:600px){.two{grid-template-columns:1fr;}.metrics{grid-template-columns:repeat(3,1fr);}}
-.card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
-.shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.stitle{font-size:13px;font-weight:600;}
-.nlink{font-size:11px;color:var(--blue);text-decoration:none;padding:3px 8px;border-radius:8px;border:1px solid rgba(24,95,165,0.3);}
-.row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);}
-.row:last-child{border-bottom:none;}
-.chk{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:all .15s;}
-.chk.done{background:var(--green);border-color:var(--green);}
-.chk.done::after{content:'';display:block;width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);}
-.chk.loading{opacity:.4;pointer-events:none;}
-.itxt{font-size:13px;color:var(--text);line-height:1.45;flex:1;min-width:0;}
-.itxt.done{text-decoration:line-through;color:var(--text3);}
-.isub{font-size:11px;color:var(--text3);}
-.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;}
-.bpurple{background:#EEEDFE;color:#3C3489;}.bblue{background:#E6F1FB;color:#0C447C;}
-.bteal{background:#E1F5EE;color:#085041;}.bamber{background:#FAEEDA;color:#633806;}
-.bred{background:#FCEBEB;color:#791F1F;}.bgray{background:#F1EFE8;color:#444441;}
-.bgreen{background:#EAF3DE;color:#27500A;}.borange{background:#FEF3E8;color:#7A3A00;}
-.bpink{background:#FEE8F3;color:#7A0044;}
-@media(prefers-color-scheme:dark){
-  .bpurple{background:#2a2460;color:#AFA9EC;}.bblue{background:#0a2a4a;color:#85B7EB;}
-  .bteal{background:#0a2e24;color:#5DCAA5;}.bamber{background:#3a2a0a;color:#EF9F27;}
-  .bred{background:#3a1010;color:#F09595;}.bgray{background:#2a2a28;color:#B4B2A9;}
-  .bgreen{background:#0a2a1a;color:#97C459;}.borange{background:#3a1e00;color:#F5A623;}
-  .bpink{background:#3a0022;color:#F07ACC;}
-}
-.dchip{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;margin-top:2px;}
-.dchip.urg{color:var(--red);font-weight:600;}
-.irow{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
-.irow input,.irow select{padding:8px 10px;border:1px solid var(--border2);border-radius:10px;background:var(--bg);color:var(--text);font-size:13px;outline:none;}
-.irow input:focus,.irow select:focus{border-color:var(--blue);}
-.irow input{flex:1;min-width:100px;}
-.irow button{padding:8px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;}
-.irow button:disabled{opacity:.5;cursor:not-allowed;}
-/* 情報収集メモ用 */
-.filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
-.ftag{padding:4px 11px;font-size:12px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
-.ftag.on{background:var(--blue);color:#fff;border-color:var(--blue);}
-.info-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
-.info-body{flex:1;min-width:0;}
-.info-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;}
-.info-desc{font-size:11px;color:var(--text2);line-height:1.5;}
-.info-meta{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap;}
-.info-date{font-size:10px;color:var(--text3);}
-.del{font-size:16px;cursor:pointer;color:var(--text3);flex-shrink:0;padding:0 2px;}
-.del:hover{color:var(--red);}
-.empty{text-align:center;padding:20px;color:var(--text3);font-size:13px;}
-.toast{position:fixed;bottom:calc(var(--tabbar)+10px);left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
-.toast.show{opacity:1;}
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3250;
+    --accent: #4f6ef7;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --orange: #f97316;
+    --pink: #ec4899;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1d27 50%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+  .badge { background: var(--accent); color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+
+  .countdown-mini {
+    display: flex; gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .countdown-mini span { color: var(--accent); font-weight: 600; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 24px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 8px 18px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    cursor: pointer;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 13px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .tab:hover { color: var(--text); background: var(--surface2); }
+
+  .tab.active {
+    color: var(--accent);
+    background: var(--bg);
+    border-color: var(--border);
+    border-bottom-color: var(--bg);
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Main */
+  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Broadcom Panel */
+  .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .countdown-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .countdown-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .countdown-label { font-size: 12px; color: var(--muted); }
+
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-done { background: var(--green); }
+  .status-wait { background: var(--yellow); }
+  .status-todo { background: var(--muted); }
+
+  /* TODO Panel */
+  .todo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 900px) { .todo-grid { grid-template-columns: 1fr; } }
+
+  .todo-col-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+
+  .todo-item:hover { border-color: var(--accent); }
+
+  .todo-item.done { opacity: 0.45; }
+  .todo-item.done .todo-name { text-decoration: line-through; }
+
+  .todo-check {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .todo-check:hover { border-color: var(--accent); }
+  .todo-item.done .todo-check { background: var(--green); border-color: var(--green); }
+
+  .todo-content { flex: 1; min-width: 0; }
+  .todo-name { font-size: 13px; line-height: 1.4; word-break: break-all; }
+
+  .todo-meta {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .priority-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .p-高 { background: rgba(239,68,68,0.2); color: #fca5a5; }
+  .p-中 { background: rgba(234,179,8,0.2); color: #fde047; }
+  .p-低 { background: rgba(100,116,139,0.2); color: #94a3b8; }
+
+  .due-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .due-date.overdue { color: var(--red); }
+  .due-date.soon { color: var(--orange); }
+
+  /* Delete button */
+  .btn-delete {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .btn-delete:hover { color: var(--red); background: rgba(239,68,68,0.1); }
+
+  /* Add form */
+  .add-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .add-form input, .add-form select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .add-form input:focus, .add-form select:focus { border-color: var(--accent); }
+  .add-form input { flex: 1; min-width: 120px; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #3b5bdb; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Info Panel */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+  }
+
+  .info-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .info-item:hover { border-color: var(--accent); }
+
+  .info-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .info-title { font-size: 14px; font-weight: 600; flex: 1; }
+
+  .info-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+
+  .type-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .t-競合情報 { background: rgba(239,68,68,0.2); color: #fca5a5; }
+  .t-入札情報 { background: rgba(79,110,247,0.2); color: #93c5fd; }
+  .t-製品知識 { background: rgba(34,197,94,0.2); color: #86efac; }
+  .t-VM製品 { background: rgba(124,58,237,0.2); color: #c4b5fd; }
+  .t-業界動向 { background: rgba(249,115,22,0.2); color: #fdba74; }
+  .t-英語業務 { background: rgba(236,72,153,0.2); color: #f9a8d4; }
+  .t-Office操作 { background: rgba(100,116,139,0.2); color: #94a3b8; }
+
+  .info-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .info-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn-notion {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: inherit;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .btn-notion:hover { border-color: var(--green); color: var(--green); background: rgba(34,197,94,0.08); }
+  .btn-notion.uploaded { border-color: var(--green); color: var(--green); opacity: 0.6; cursor: default; }
+
+  .sent-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(34,197,94,0.2);
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* Info add form */
+  .info-add-form {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .info-add-form .form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .info-add-form input,
+  .info-add-form select,
+  .info-add-form textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .info-add-form input:focus,
+  .info-add-form select:focus,
+  .info-add-form textarea:focus { border-color: var(--accent); }
+
+  .info-add-form textarea { width: 100%; height: 70px; resize: vertical; }
+
+  /* Schedule */
+  .schedule-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .schedule-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .schedule-item:hover { border-color: var(--accent); }
+
+  .schedule-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 90px;
+    font-weight: 600;
+  }
+
+  .schedule-title { flex: 1; font-size: 13px; }
+
+  .cat-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .c-仕事 { background: rgba(79,110,247,0.2); color: #93c5fd; }
+  .c-転職 { background: rgba(124,58,237,0.2); color: #c4b5fd; }
+  .c-個人 { background: rgba(34,197,94,0.2); color: #86efac; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: none;
+    z-index: 9999;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    max-width: 300px;
+  }
+
+  #toast.show { display: block; animation: fadeInUp 0.3s ease; }
+  #toast.success { border-left: 3px solid var(--green); }
+  #toast.error { border-left: 3px solid var(--red); }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Confirm modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .modal h3 { font-size: 15px; margin-bottom: 10px; }
+  .modal p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: #dc2626; }
+
+  .loading-spin {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-btn {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(79,110,247,0.1);
+  }
+
+  .filter-label { font-size: 12px; color: var(--muted); }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 32px;
+    font-size: 13px;
+  }
+
+  /* section header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .count-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    padding: 1px 8px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <div><div class="htitle">マイポータル</div><div class="hsub" id="today-label"></div></div>
-    <div class="hbtns">
-      <span class="syncinfo" id="sync-time"></span>
-      <button class="btn" id="sync-btn" onclick="syncAll()">
-        <span class="sdot" id="sdot"></span><span id="slbl">Notionと同期</span>
-      </button>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">⚡ MyPortal</div>
+    <div class="badge">Cowork対応</div>
+  </div>
+  <div class="countdown-mini" id="headerCountdown"></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('broadcom')">🎯 Broadcom準備</div>
+  <div class="tab" onclick="switchTab('todo')">✔️ TODO</div>
+  <div class="tab" onclick="switchTab('info')">📰 情報収集</div>
+  <div class="tab" onclick="switchTab('schedule')">📅 スケジュール</div>
+</div>
+
+<div class="main">
+
+  <!-- BROADCOM PANEL -->
+  <div class="panel active" id="panel-broadcom">
+    <div class="countdown-grid" id="cdGrid"></div>
+
+    <div class="card">
+      <div class="card-title">📋 手続きチェックリスト</div>
+      <div id="checklistWrap">
+        <div class="checklist-item"><div class="status-dot status-done"></div>オファーレター確認・受取</div>
+        <div class="checklist-item"><div class="status-dot status-wait"></div>オファーレター署名　（⏳ 2026年3月末）</div>
+        <div class="checklist-item"><div class="status-dot status-todo"></div>退職届 提出</div>
+        <div class="checklist-item"><div class="status-dot status-todo"></div>社内引き継ぎ資料 作成</div>
+        <div class="checklist-item"><div class="status-dot status-todo"></div>有給消化 調整</div>
+        <div class="checklist-item"><div class="status-dot status-todo"></div>VMware 入社書類 一式 提出</div>
+        <div class="checklist-item"><div class="status-dot status-todo"></div>健康保険・年金 切替手続き</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗓️ 重要日程</div>
+      <div class="schedule-list">
+        <div class="schedule-item"><div class="schedule-date">2026-03-末</div><div class="schedule-title">オファーレター署名期限</div><div class="cat-badge c-転職">転職</div></div>
+        <div class="schedule-item"><div class="schedule-date">2026-05-30</div><div class="schedule-title">日立システムズ 退職日</div><div class="cat-badge c-転職">転職</div></div>
+        <div class="schedule-item"><div class="schedule-date">2026-06-01</div><div class="schedule-title">Broadcom VMware 入社日</div><div class="cat-badge c-転職">転職</div></div>
+      </div>
     </div>
   </div>
 
-  <!-- Tab0: Broadcom準備 -->
-  <div class="pane on" id="pane0">
-    <div class="metrics" id="m0"></div>
-    <div class="two">
-      <div>
-        <div class="shdr"><span class="stitle">書類提出ステータス</span><a class="nlink" href="https://www.notion.so/325112bb45a38161839fc593c658407d" target="_blank">Notionで開く</a></div>
-        <div class="card" id="doc-list"></div>
-      </div>
-      <div>
-        <div class="shdr"><span class="stitle">重要日程</span></div>
-        <div class="card" id="mile-list"></div>
-      </div>
+  <!-- TODO PANEL -->
+  <div class="panel" id="panel-todo">
+    <div class="section-header">
+      <div class="section-title">✔️ タスク管理</div>
+      <button class="btn btn-secondary" onclick="loadTodos()" id="refreshTodo">🔄 更新</button>
     </div>
-  </div>
 
-  <!-- Tab1: TODO -->
-  <div class="pane" id="pane1">
-    <div class="two">
-      <div>
-        <div class="shdr"><span class="stitle">仕事のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
-        <div class="card" id="task-s"></div>
-        <div class="irow">
-          <input id="ni-s" type="text" placeholder="仕事タスクを追加…" onkeydown="if(event.key==='Enter')addTask('仕事')">
-          <select id="pri-s"><option>高</option><option selected>中</option><option>低</option></select>
-          <button id="btn-s" onclick="addTask('仕事')">追加</button>
+    <div class="todo-grid" id="todoGrid">
+      <div class="card">
+        <div class="todo-col-title" style="color:#93c5fd">💼 仕事</div>
+        <div id="col-仕事"><div class="empty">読み込み中...</div></div>
+        <div class="add-form" id="form-仕事">
+          <input type="text" placeholder="タスクを追加..." id="inp-仕事">
+          <select id="pri-仕事"><option>高</option><option selected>中</option><option>低</option></select>
+          <input type="date" id="due-仕事">
+          <button class="btn btn-primary" onclick="addTodo('仕事')">追加</button>
         </div>
       </div>
-      <div>
-        <div class="shdr"><span class="stitle">個人のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
-        <div class="card" id="task-k"></div>
-        <div class="irow">
-          <input id="ni-k" type="text" placeholder="個人タスクを追加…" onkeydown="if(event.key==='Enter')addTask('個人')">
-          <select id="pri-k"><option>高</option><option selected>中</option><option>低</option></select>
-          <button id="btn-k" onclick="addTask('個人')">追加</button>
+      <div class="card">
+        <div class="todo-col-title" style="color:#86efac">🏠 個人</div>
+        <div id="col-個人"><div class="empty">読み込み中...</div></div>
+        <div class="add-form" id="form-個人">
+          <input type="text" placeholder="タスクを追加..." id="inp-個人">
+          <select id="pri-個人"><option>高</option><option selected>中</option><option>低</option></select>
+          <input type="date" id="due-個人">
+          <button class="btn btn-primary" onclick="addTodo('個人')">追加</button>
         </div>
       </div>
-    </div>
-    <div style="margin-top:10px;">
-      <div class="shdr"><span class="stitle">転職関連のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
-      <div class="card" id="task-t"></div>
-      <div class="irow">
-        <input id="ni-t" type="text" placeholder="転職タスクを追加…" onkeydown="if(event.key==='Enter')addTask('転職')">
-        <select id="pri-t"><option>高</option><option selected>中</option><option>低</option></select>
-        <button id="btn-t" onclick="addTask('転職')">追加</button>
+      <div class="card">
+        <div class="todo-col-title" style="color:#c4b5fd">🎯 転職</div>
+        <div id="col-転職"><div class="empty">読み込み中...</div></div>
+        <div class="add-form" id="form-転職">
+          <input type="text" placeholder="タスクを追加..." id="inp-転職">
+          <select id="pri-転職"><option>高</option><option selected>中</option><option>低</option></select>
+          <input type="date" id="due-転職">
+          <button class="btn btn-primary" onclick="addTodo('転職')">追加</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Tab2: 情報収集メモ -->
-  <div class="pane" id="pane2">
-    <div class="shdr">
-      <span class="stitle">情報収集メモ</span>
-      <a class="nlink" href="https://www.notion.so/4822d54be75e4df0a3722cc407e67b46" target="_blank">Notionで管理</a>
+  <!-- INFO PANEL -->
+  <div class="panel" id="panel-info">
+    <div class="section-header">
+      <div class="section-title">📰 情報収集メモ</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="loadInfo()" id="refreshInfo">🔄 更新</button>
+      </div>
     </div>
-    <div class="filter-row" id="info-filters"></div>
-    <div id="info-list"></div>
-    <div class="card" style="margin-top:10px;">
-      <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:8px;">新しい情報を追加</div>
-      <div class="irow">
-        <input id="info-title" type="text" placeholder="タイトル・件名" style="flex:2;" onkeydown="if(event.key==='Enter')addInfo()">
-        <select id="info-cat">
+
+    <!-- Add form -->
+    <div class="info-add-form">
+      <div class="card-title" style="margin-bottom:12px">＋ 新規メモ追加</div>
+      <div class="form-row">
+        <input type="text" placeholder="用語・タイトル *" id="info-title" style="flex:2;min-width:160px">
+        <select id="info-type" style="min-width:120px">
           <option>競合情報</option><option>入札情報</option><option>製品知識</option>
           <option>VM製品</option><option>業界動向</option><option>英語業務</option><option>Office操作</option>
         </select>
+        <select id="info-imp" style="min-width:80px"><option>高</option><option selected>中</option><option>低</option></select>
       </div>
-      <div class="irow" style="margin-top:6px;">
-        <input id="info-desc" type="text" placeholder="内容・メモ（任意）" style="flex:1;">
-        <select id="info-pri"><option>高</option><option selected>中</option><option>低</option></select>
-        <button id="btn-info" onclick="addInfo()">追加</button>
+      <textarea id="info-desc" placeholder="説明・内容（省略可）"></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        <button class="btn btn-primary" onclick="addInfo()">Notionに追加</button>
       </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-bar">
+      <span class="filter-label">絞り込み:</span>
+      <button class="filter-btn active" onclick="filterInfo('all', this)">すべて</button>
+      <button class="filter-btn" onclick="filterInfo('競合情報', this)">競合情報</button>
+      <button class="filter-btn" onclick="filterInfo('入札情報', this)">入札情報</button>
+      <button class="filter-btn" onclick="filterInfo('VM製品', this)">VM製品</button>
+      <button class="filter-btn" onclick="filterInfo('業界動向', this)">業界動向</button>
+      <button class="filter-btn" onclick="filterInfo('未発信', this)">未発信のみ</button>
+    </div>
+
+    <div class="info-grid" id="infoGrid">
+      <div class="empty" style="grid-column:1/-1">読み込み中...</div>
     </div>
   </div>
 
-  <!-- Tab3: スケジュール -->
-  <div class="pane" id="pane3">
-    <div class="two">
-      <div>
-        <div class="shdr"><span class="stitle">直近の予定</span><a class="nlink" href="https://www.notion.so/5abb5d373eb34b23895d7879a57618d4" target="_blank">Notionで管理</a></div>
-        <div class="card" id="sch-list"></div>
-        <div class="irow">
-          <input id="sch-t" type="text" placeholder="予定タイトル…" onkeydown="if(event.key==='Enter')addSch()">
-          <input id="sch-d" type="date" style="width:130px;flex-shrink:0;">
-          <select id="sch-c" style="flex-shrink:0;"><option>仕事</option><option>転職</option><option>個人</option></select>
-          <button id="btn-sch" onclick="addSch()">追加</button>
-        </div>
+  <!-- SCHEDULE PANEL -->
+  <div class="panel" id="panel-schedule">
+    <div class="section-header">
+      <div class="section-title">📅 スケジュール</div>
+      <button class="btn btn-secondary" onclick="loadSchedule()">🔄 更新</button>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">＋ 予定を追加</div>
+      <div class="add-form">
+        <input type="text" placeholder="予定のタイトル *" id="sch-title" style="flex:2">
+        <input type="date" id="sch-date">
+        <select id="sch-cat"><option>仕事</option><option>転職</option><option>個人</option></select>
+        <button class="btn btn-primary" onclick="addSchedule()">追加</button>
       </div>
-      <div>
-        <div class="shdr"><span class="stitle">締切・マイルストーン</span></div>
-        <div class="card" id="dead-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 予定一覧</div>
+      <div class="schedule-list" id="scheduleList">
+        <div class="empty">読み込み中...</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- タブバー -->
-<div class="tabbar">
-  <button class="tbtn t0 on" onclick="sw(0)" id="tb0">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span>準備</span>
-  </button>
-  <button class="tbtn t1" onclick="sw(1)" id="tb1">
-    <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-    <span>TODO</span>
-  </button>
-  <button class="tbtn t2" onclick="sw(2)" id="tb2">
-    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-    <span>情報収集</span>
-  </button>
-  <button class="tbtn t3" onclick="sw(3)" id="tb3">
-    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    <span>スケジュール</span>
-  </button>
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>🗑️ 削除の確認</h3>
+    <p id="modalMsg">このアイテムを削除しますか？この操作は取り消せません。</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-danger" id="modalConfirm">削除する</button>
+    </div>
+  </div>
 </div>
-<div class="toast" id="toast"></div>
 
 <script>
-const TOKEN  = 'ntn_V46092302432x0V2m9PzBKX1AekFAq3EFxDFvKgG9Sz1zZ';
-const PROXY  = 'https://notion-proxy.yosuke-nakamura-yg.workers.dev';
-const TASK_DB= 'dc754a0d-0b70-4775-82f4-e7b2fc8e3f73';
-const SCH_DB = '5abb5d37-3eb3-4b23-895d-7879a57618d4';
-const INFO_DB= 'ab97942d-5b0d-4025-9bac-031230b1448a';
+const PROXY = 'https://notion-proxy.yosuke-nakamura-yg.workers.dev';
+const DB_TASK = 'dc754a0d0b70477582f4e7b2fc8e3f73';
+const DB_INFO = 'ab97942d5b0d40259bac031230b1448a';
+const DB_SCH  = '5abb5d373eb34b23895d7879a57618d4';
 
-const FIXED={
-  docs:[
-    {name:'履歴書',status:'送付済み',ok:true},{name:'源泉徴収票',status:'送付済み',ok:true},
-    {name:'卒業証明書（日本語）',status:'送付済み',ok:true},{name:'卒業証明書（英文）',status:'送付済み',ok:true},
-    {name:'オファーレター',status:'3月末受取予定',ok:false},{name:'退職届',status:'準備中',ok:false},
-    {name:'身元保証書',status:'未着手',ok:false},
-  ],
-  milestones:[
-    {title:'退職申告 期限確認',date:'2026-03-25',urgent:true},
-    {title:'オファーレター 受取・署名',date:'2026-03-31',urgent:true},
-    {title:'退職届 提出',date:'2026-04-10',urgent:false},
-    {title:'退職日',date:'2026-05-30',urgent:false},
-    {title:'VMware 入社日',date:'2026-06-01',urgent:false},
-  ],
-  deadlines:[
-    {title:'オファーレター 署名・返送',date:'2026-03-31',urgent:true},
-    {title:'退職届 提出',date:'2026-04-10',urgent:false},
-    {title:'退職日',date:'2026-05-30',urgent:false},
-    {title:'入社日',date:'2026-06-01',urgent:false},
-    {title:'DC年金 移換手続き',date:'2026-11-30',urgent:false},
-  ]
-};
-
-let nTasks={s:[],k:[],t:[]};
-let nScheds=[];
-let nInfos=[];
-
-const TODAY=new Date();TODAY.setHours(0,0,0,0);
-function daysUntil(d){const t=new Date(d);t.setHours(0,0,0,0);return Math.ceil((t-TODAY)/86400000);}
-function dlabel(d){const n=daysUntil(d);if(n<0)return '期限超過';if(n===0)return '今日';if(n===1)return '明日';const dt=new Date(d);return(dt.getMonth()+1)+'/'+(dt.getDate());}
-
-const catColor={
-  仕事:'bblue',転職:'bpurple',個人:'bteal',
-  競合情報:'bred',入札情報:'bblue',製品知識:'bteal',
-  VM製品:'bpurple',業界動向:'borange',英語業務:'bpink',Office操作:'bgray'
-};
-const priColor={高:'bred',中:'bamber',低:'bgray'};
-
-let toastTimer=null;
-function toast(msg,dur=2200){
-  const el=document.getElementById('toast');
-  el.textContent=msg;el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.remove('show'),dur);
+// ===== UTIL =====
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  setTimeout(() => { el.className = ''; }, 3000);
 }
 
-async function nFetch(path,method='GET',body=null){
-  const res=await fetch(PROXY+'/notion'+path,{
-    method,
-    headers:{'Authorization':'Bearer '+TOKEN,'Notion-Version':'2022-06-28','Content-Type':'application/json'},
-    body:body?JSON.stringify(body):undefined
+let pendingDelete = null;
+function showDeleteModal(msg, onConfirm) {
+  document.getElementById('modalMsg').textContent = msg;
+  document.getElementById('modalConfirm').onclick = () => { closeModal(); onConfirm(); };
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'todo') loadTodos();
+  if (name === 'info') loadInfo();
+  if (name === 'schedule') loadSchedule();
+}
+
+// ===== NOTION API =====
+async function notionQuery(dbId, filter = null, sorts = null) {
+  const body = {};
+  if (filter) body.filter = filter;
+  if (sorts) body.sorts = sorts;
+  const r = await fetch(`${PROXY}/databases/${dbId}/query`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
   });
-  if(!res.ok){const t=await res.text();throw new Error(res.status+': '+t);}
-  return res.json();
+  if (!r.ok) throw new Error('Query failed');
+  const d = await r.json();
+  return d.results || [];
 }
 
-async function syncAll(){
-  const dot=document.getElementById('sdot');
-  const lbl=document.getElementById('slbl');
-  const btn=document.getElementById('sync-btn');
-  dot.className='sdot spin';lbl.textContent='同期中…';btn.disabled=true;
-  try{
-    // タスクDB
-    const tr=await nFetch('/v1/databases/'+TASK_DB+'/query','POST',{page_size:100});
-    const s=[],k=[],t=[];
-    (tr.results||[]).forEach(p=>{
-      const pr=p.properties;
-      const name=(pr['Name']?.title||[]).map(x=>x.plain_text).join('');
-      if(!name)return;
-      const cat=pr['カテゴリ']?.select?.name||'仕事';
-      const pri=pr['優先度']?.select?.name||'中';
-      const done=pr['ステータス']?.select?.name==='完了 🙌';
-      const item={text:name,done,pri,id:p.id};
-      if(cat==='個人')k.push(item);
-      else if(cat==='転職')t.push(item);
-      else s.push(item);
-    });
-    nTasks={s,k,t};
+async function notionCreate(dbId, props) {
+  const r = await fetch(`${PROXY}/pages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ parent: { database_id: dbId }, properties: props })
+  });
+  if (!r.ok) throw new Error('Create failed');
+  return r.json();
+}
 
-    // スケジュールDB
-    const sr=await nFetch('/v1/databases/'+SCH_DB+'/query','POST',{page_size:50});
-    nScheds=(sr.results||[]).map(p=>{
-      const pr=p.properties;
-      const title=(pr['タイトル']?.title||[]).map(x=>x.plain_text).join('');
-      const date=pr['日付']?.date?.start||'';
-      const cat=pr['カテゴリ']?.select?.name||'仕事';
-      return title&&date?{title,date,cat,id:p.id}:null;
-    }).filter(Boolean).sort((a,b)=>new Date(a.date)-new Date(b.date));
+async function notionUpdate(pageId, props) {
+  const r = await fetch(`${PROXY}/pages/${pageId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ properties: props })
+  });
+  if (!r.ok) throw new Error('Update failed');
+  return r.json();
+}
 
-    // 情報収集メモDB
-    const ir=await nFetch('/v1/databases/'+INFO_DB+'/query','POST',{
-      page_size:50,
-      sorts:[{property:'収集日',direction:'descending'},{timestamp:'created_time',direction:'descending'}]
-    });
-    nInfos=(ir.results||[]).map(p=>{
-      const pr=p.properties;
-      const title=(pr['用語']?.title||[]).map(x=>x.plain_text).join('');
-      if(!title)return null;
-      const desc=(pr['説明']?.rich_text||[]).map(x=>x.plain_text).join('');
-      const cat=pr['情報種別']?.select?.name||'製品知識';
-      const pri=pr['重要度']?.select?.name||'中';
-      const sent=pr['発信済み']?.checkbox||false;
-      const date=pr['収集日']?.date?.start||'';
-      return {title,desc,cat,pri,sent,date,id:p.id};
-    }).filter(Boolean);
+async function notionDelete(pageId) {
+  const r = await fetch(`${PROXY}/pages/${pageId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ archived: true })
+  });
+  if (!r.ok) throw new Error('Delete failed');
+  return r.json();
+}
 
-    dot.className='sdot';lbl.textContent='Notionと同期';
-    const now=new Date();
-    document.getElementById('sync-time').textContent=`${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 同期済み`;
-    toast('Notionと同期しました');
-  }catch(e){
-    dot.className='sdot err';lbl.textContent='同期失敗';
-    toast('同期失敗: '+e.message,4000);
+// ===== COUNTDOWN =====
+function updateCountdown() {
+  const now = new Date();
+  const resign = new Date('2026-05-30');
+  const join = new Date('2026-06-01');
+  const dResign = Math.max(0, Math.ceil((resign - now) / 86400000));
+  const dJoin = Math.max(0, Math.ceil((join - now) / 86400000));
+
+  const colors = [
+    { label: '退職まで', days: dResign, color: '#f97316' },
+    { label: 'VMware入社まで', days: dJoin, color: '#4f6ef7' },
+  ];
+
+  document.getElementById('cdGrid').innerHTML = colors.map(c => `
+    <div class="countdown-box">
+      <div class="countdown-num" style="color:${c.color}">${c.days}</div>
+      <div class="countdown-label">日後 — ${c.label}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('headerCountdown').innerHTML =
+    `退職 <span>${dResign}日</span> &nbsp; 入社 <span>${dJoin}日</span>`;
+}
+
+// ===== TODO =====
+let todos = [];
+
+async function loadTodos() {
+  document.getElementById('refreshTodo').innerHTML = '<span class="loading-spin"></span>更新中';
+  try {
+    const results = await notionQuery(DB_TASK, null, [
+      { property: '優先度', direction: 'ascending' },
+      { property: 'ステータス', direction: 'ascending' }
+    ]);
+    todos = results.map(r => ({
+      id: r.id,
+      name: r.properties.Name?.title?.[0]?.plain_text || '（無題）',
+      cat: r.properties.カテゴリ?.select?.name || '仕事',
+      status: r.properties.ステータス?.select?.name || '未着手',
+      priority: r.properties.優先度?.select?.name || '中',
+      due: r.properties.期限?.date?.start || '',
+    }));
+    renderTodos();
+  } catch(e) {
+    toast('タスクの読み込みに失敗しました', 'error');
   }
-  btn.disabled=false;
-  renderAll();
+  document.getElementById('refreshTodo').innerHTML = '🔄 更新';
 }
 
-async function addTask(cat){
-  const keyMap={仕事:'s',個人:'k',転職:'t'};
-  const key=keyMap[cat];
-  const inp=document.getElementById('ni-'+key);
-  const val=inp.value.trim();
-  if(!val)return;
-  const pri=document.getElementById('pri-'+key).value;
-  const btn=document.getElementById('btn-'+key);
-  btn.disabled=true;btn.textContent='追加中…';
-  try{
-    const res=await nFetch('/v1/pages','POST',{
-      parent:{database_id:TASK_DB},
-      properties:{
-        'Name':{title:[{text:{content:val}}]},
-        'カテゴリ':{select:{name:cat}},
-        '優先度':{select:{name:pri}},
-        'ステータス':{select:{name:'未着手'}}
-      }
-    });
-    nTasks[key].unshift({text:val,done:false,pri,id:res.id});
-    inp.value='';toast('Notionにタスクを追加しました');renderTasks();
-  }catch(e){toast('追加失敗: '+e.message,4000);}
-  btn.disabled=false;btn.textContent='追加';
-}
-
-async function toggleTask(key,idx){
-  const task=nTasks[key][idx];
-  const newDone=!task.done;
-  const chk=document.querySelector(`.chk[data-key="${key}"][data-idx="${idx}"]`);
-  if(chk)chk.classList.add('loading');
-  try{
-    await nFetch('/v1/pages/'+task.id,'PATCH',{
-      properties:{'ステータス':{select:{name:newDone?'完了 🙌':'未着手'}}}
-    });
-    nTasks[key][idx].done=newDone;
-    toast(newDone?'完了にしました':'未着手に戻しました');renderTasks();
-  }catch(e){
-    toast('更新失敗',4000);
-    if(chk)chk.classList.remove('loading');
-  }
-}
-
-async function addInfo(){
-  const title=document.getElementById('info-title').value.trim();
-  const desc=document.getElementById('info-desc').value.trim();
-  const cat=document.getElementById('info-cat').value;
-  const pri=document.getElementById('info-pri').value;
-  if(!title)return;
-  const btn=document.getElementById('btn-info');
-  btn.disabled=true;btn.textContent='追加中…';
-  const today=new Date().toISOString().split('T')[0];
-  try{
-    const res=await nFetch('/v1/pages','POST',{
-      parent:{database_id:INFO_DB},
-      properties:{
-        '用語':{title:[{text:{content:title}}]},
-        '説明':{rich_text:[{text:{content:desc}}]},
-        '情報種別':{select:{name:cat}},
-        '重要度':{select:{name:pri}},
-        '発信済み':{checkbox:false},
-        '収集日':{date:{start:today}}
-      }
-    });
-    nInfos.unshift({title,desc,cat,pri,sent:false,date:today,id:res.id});
-    document.getElementById('info-title').value='';
-    document.getElementById('info-desc').value='';
-    toast('Notionに情報を追加しました');renderInfos();
-  }catch(e){toast('追加失敗: '+e.message,4000);}
-  btn.disabled=false;btn.textContent='追加';
-}
-
-async function toggleSent(idx){
-  const info=nInfos[idx];
-  const newSent=!info.sent;
-  try{
-    await nFetch('/v1/pages/'+info.id,'PATCH',{
-      properties:{'発信済み':{checkbox:newSent}}
-    });
-    nInfos[idx].sent=newSent;
-    toast(newSent?'発信済みにしました':'未発信に戻しました');renderInfos();
-  }catch(e){toast('更新失敗',4000);}
-}
-
-async function addSch(){
-  const t=document.getElementById('sch-t').value.trim();
-  const d=document.getElementById('sch-d').value;
-  const c=document.getElementById('sch-c').value;
-  if(!t||!d){toast('タイトルと日付を入力してください');return;}
-  const btn=document.getElementById('btn-sch');
-  btn.disabled=true;btn.textContent='追加中…';
-  try{
-    const res=await nFetch('/v1/pages','POST',{
-      parent:{database_id:SCH_DB},
-      properties:{
-        'タイトル':{title:[{text:{content:t}}]},
-        '日付':{date:{start:d}},
-        'カテゴリ':{select:{name:c}},
-        'ステータス':{select:{name:'予定'}}
-      }
-    });
-    nScheds.push({title:t,date:d,cat:c,id:res.id});
-    nScheds.sort((a,b)=>new Date(a.date)-new Date(b.date));
-    document.getElementById('sch-t').value='';
-    toast('Notionにスケジュールを追加しました');renderSch();
-  }catch(e){toast('追加失敗: '+e.message,4000);}
-  btn.disabled=false;btn.textContent='追加';
-}
-
-function sw(i){
-  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',i===j));
-  document.querySelectorAll('.tbtn').forEach((b,j)=>b.classList.toggle('on',i===j));
-}
-
-function renderMetrics(){
-  const dIn=Math.max(0,daysUntil('2026-06-01'));
-  const dQ=Math.max(0,daysUntil('2026-05-30'));
-  const docOk=FIXED.docs.filter(d=>d.ok).length;
-  document.getElementById('m0').innerHTML=`
-    <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${dIn}</div><div class="msub">日</div></div>
-    <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${dQ}</div><div class="msub">日</div></div>
-    <div class="metric"><div class="mlabel">書類提出</div><div class="mval">${docOk}</div><div class="msub">/ ${FIXED.docs.length}件</div></div>`;
-}
-function renderDocs(){
-  document.getElementById('doc-list').innerHTML=FIXED.docs.map(d=>`
-    <div class="row"><span class="itxt">${d.name}</span><span class="badge ${d.ok?'bgreen':'bamber'}">${d.status}</span></div>`).join('');
-}
-function renderMilestones(){
-  document.getElementById('mile-list').innerHTML=[...FIXED.milestones].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(m=>`
-    <div class="row"><span class="itxt">${m.title}</span><span class="dchip ${m.urgent?'urg':''}">${dlabel(m.date)}</span></div>`).join('');
-}
-
-function renderTasks(){
-  ['s','k','t'].forEach(key=>{
-    const arr=nTasks[key];
-    const id='task-'+key;
-    document.getElementById(id).innerHTML=arr.length
-      ?arr.map((x,i)=>`
-        <div class="row">
-          <div class="chk ${x.done?'done':''}" data-key="${key}" data-idx="${i}" onclick="toggleTask('${key}',${i})"></div>
-          <div style="flex:1;min-width:0;"><div class="itxt ${x.done?'done':''}">${x.text}</div></div>
-          <span class="badge ${priColor[x.pri]||'bgray'}">${x.pri}</span>
-        </div>`).join('')
-      :'<div class="empty">Notionと同期してください</div>';
+function renderTodos() {
+  ['仕事', '個人', '転職'].forEach(cat => {
+    const items = todos.filter(t => t.cat === cat);
+    const col = document.getElementById('col-' + cat);
+    if (!items.length) { col.innerHTML = '<div class="empty">タスクなし</div>'; return; }
+    col.innerHTML = items.map(t => {
+      const done = t.status === '完了 🙌';
+      const dueClass = getDueClass(t.due);
+      return `
+        <div class="todo-item ${done ? 'done' : ''}" id="todo-${t.id}">
+          <div class="todo-check" onclick="toggleTodo('${t.id}', ${done})">
+            ${done ? '✓' : ''}
+          </div>
+          <div class="todo-content">
+            <div class="todo-name">${escHtml(t.name)}</div>
+            <div class="todo-meta">
+              <span class="priority-badge p-${t.priority}">${t.priority}</span>
+              ${t.due ? `<span class="due-date ${dueClass}">${t.due}</span>` : ''}
+            </div>
+          </div>
+          <button class="btn-delete" title="削除" onclick="deleteTodo('${t.id}', '${escHtml(t.name)}')">✕</button>
+        </div>`;
+    }).join('');
   });
 }
 
-let infoFilter='all';
-function renderInfoFilters(){
-  const cats=['all','競合情報','入札情報','製品知識','VM製品','業界動向','英語業務','Office操作'];
-  document.getElementById('info-filters').innerHTML=cats.map(c=>`
-    <button class="ftag ${infoFilter===c?'on':''}" onclick="infoFilter='${c}';renderInfoFilters();renderInfos();">${c==='all'?'すべて':c}</button>`).join('');
+function getDueClass(due) {
+  if (!due) return '';
+  const d = new Date(due);
+  const now = new Date();
+  const diff = (d - now) / 86400000;
+  if (diff < 0) return 'overdue';
+  if (diff <= 3) return 'soon';
+  return '';
 }
-function renderInfos(){
-  const list=infoFilter==='all'?nInfos:nInfos.filter(x=>x.cat===infoFilter);
-  if(!list.length){document.getElementById('info-list').innerHTML='<div class="empty">Notionと同期してください</div>';return;}
-  document.getElementById('info-list').innerHTML=list.map((x,i)=>`
-    <div class="info-card">
-      <div class="info-body">
-        <div class="info-title">${x.title}</div>
-        ${x.desc?`<div class="info-desc">${x.desc}</div>`:''}
-        <div class="info-meta">
-          <span class="badge ${catColor[x.cat]||'bgray'}">${x.cat}</span>
-          <span class="badge ${priColor[x.pri]||'bgray'}">${x.pri}</span>
-          ${x.date?`<span class="info-date">${x.date.slice(5).replace('-','/')}</span>`:''}
-          <button style="font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid var(--border2);background:${x.sent?'var(--green)':'var(--bg2)'};color:${x.sent?'#fff':'var(--text2)'};cursor:pointer;" onclick="toggleSent(${nInfos.indexOf(x)})">${x.sent?'✓ 発信済み':'未発信'}</button>
-        </div>
+
+async function toggleTodo(id, isDone) {
+  const newStatus = isDone ? '未着手' : '完了 🙌';
+  try {
+    await notionUpdate(id, { ステータス: { select: { name: newStatus } } });
+    const t = todos.find(x => x.id === id);
+    if (t) t.status = newStatus;
+    renderTodos();
+  } catch(e) { toast('更新に失敗しました', 'error'); }
+}
+
+function deleteTodo(id, name) {
+  showDeleteModal(`「${name}」を削除しますか？`, async () => {
+    try {
+      await notionDelete(id);
+      todos = todos.filter(t => t.id !== id);
+      renderTodos();
+      toast('削除しました ✓');
+    } catch(e) { toast('削除に失敗しました', 'error'); }
+  });
+}
+
+async function addTodo(cat) {
+  const inp = document.getElementById('inp-' + cat);
+  const pri = document.getElementById('pri-' + cat);
+  const due = document.getElementById('due-' + cat);
+  if (!inp.value.trim()) { toast('タスク名を入力してください', 'error'); return; }
+  const btn = event.target;
+  btn.disabled = true; btn.innerHTML = '<span class="loading-spin"></span>';
+  try {
+    const props = {
+      Name: { title: [{ text: { content: inp.value.trim() } }] },
+      カテゴリ: { select: { name: cat } },
+      優先度: { select: { name: pri.value } },
+      ステータス: { select: { name: '未着手' } },
+    };
+    if (due.value) props.期限 = { date: { start: due.value } };
+    await notionCreate(DB_TASK, props);
+    inp.value = ''; due.value = '';
+    await loadTodos();
+    toast('タスクを追加しました ✓');
+  } catch(e) { toast('追加に失敗しました', 'error'); }
+  btn.disabled = false; btn.textContent = '追加';
+}
+
+// ===== INFO =====
+let infoItems = [];
+let infoFilter = 'all';
+
+async function loadInfo() {
+  document.getElementById('refreshInfo').innerHTML = '<span class="loading-spin"></span>更新中';
+  try {
+    const results = await notionQuery(DB_INFO, null, [
+      { timestamp: 'created_time', direction: 'descending' }
+    ]);
+    infoItems = results.map(r => ({
+      id: r.id,
+      title: r.properties.用語?.title?.[0]?.plain_text || '（無題）',
+      type: r.properties.情報種別?.select?.name || '',
+      imp: r.properties.重要度?.select?.name || '',
+      desc: r.properties.説明?.rich_text?.[0]?.plain_text || '',
+      sent: r.properties.発信済み?.checkbox || false,
+    }));
+    renderInfo();
+  } catch(e) {
+    toast('情報の読み込みに失敗しました', 'error');
+  }
+  document.getElementById('refreshInfo').innerHTML = '🔄 更新';
+}
+
+function filterInfo(f, btn) {
+  infoFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderInfo();
+}
+
+function renderInfo() {
+  let items = infoItems;
+  if (infoFilter !== 'all') {
+    if (infoFilter === '未発信') items = items.filter(i => !i.sent);
+    else items = items.filter(i => i.type === infoFilter);
+  }
+
+  const grid = document.getElementById('infoGrid');
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">該当するメモがありません</div>';
+    return;
+  }
+
+  grid.innerHTML = items.map(item => `
+    <div class="info-item" id="info-${item.id}">
+      <div class="info-header">
+        <div class="info-title">${escHtml(item.title)}</div>
       </div>
-    </div>`).join('');
+      <div class="info-badges">
+        ${item.type ? `<span class="type-badge t-${item.type}">${item.type}</span>` : ''}
+        ${item.imp ? `<span class="priority-badge p-${item.imp}">${item.imp}</span>` : ''}
+        ${item.sent ? '<span class="sent-badge">✓ 発信済</span>' : ''}
+      </div>
+      ${item.desc ? `<div class="info-desc">${escHtml(item.desc)}</div>` : ''}
+      <div class="info-actions">
+        ${!item.sent ? `<button class="btn-notion" onclick="markSent('${item.id}')">📤 発信済みにする</button>` : ''}
+        <button class="btn-delete" title="削除" onclick="deleteInfo('${item.id}', '${escHtml(item.title)}')">✕</button>
+      </div>
+    </div>
+  `).join('');
 }
 
-function renderSch(){
-  document.getElementById('sch-list').innerHTML=nScheds.length
-    ?nScheds.map(x=>`
-      <div class="row">
-        <div class="itxt">${x.title}</div>
-        <span class="badge ${catColor[x.cat]||'bgray'}">${x.cat}</span>
-        <span class="dchip">${dlabel(x.date)}</span>
-      </div>`).join('')
-    :'<div class="empty">Notionと同期してください</div>';
-  document.getElementById('dead-list').innerHTML=[...FIXED.deadlines].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(d=>`
-    <div class="row"><div class="itxt">${d.title}</div><span class="dchip ${d.urgent?'urg':''}">${dlabel(d.date)}</span></div>`).join('');
+async function markSent(id) {
+  try {
+    await notionUpdate(id, { 発信済み: { checkbox: true } });
+    const item = infoItems.find(i => i.id === id);
+    if (item) item.sent = true;
+    renderInfo();
+    toast('発信済みにしました ✓');
+  } catch(e) { toast('更新に失敗しました', 'error'); }
 }
 
-function renderAll(){
-  renderMetrics();renderDocs();renderMilestones();
-  renderTasks();
-  renderInfoFilters();renderInfos();
-  renderSch();
+function deleteInfo(id, title) {
+  showDeleteModal(`「${title}」を削除しますか？`, async () => {
+    try {
+      await notionDelete(id);
+      infoItems = infoItems.filter(i => i.id !== id);
+      renderInfo();
+      toast('削除しました ✓');
+    } catch(e) { toast('削除に失敗しました', 'error'); }
+  });
 }
 
-function init(){
-  const d=new Date();
-  document.getElementById('today-label').textContent=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
-  document.getElementById('sch-d').valueAsDate=new Date();
-  renderAll();
-  syncAll();
+async function addInfo() {
+  const title = document.getElementById('info-title').value.trim();
+  const type  = document.getElementById('info-type').value;
+  const imp   = document.getElementById('info-imp').value;
+  const desc  = document.getElementById('info-desc').value.trim();
+  if (!title) { toast('用語・タイトルを入力してください', 'error'); return; }
+
+  const btn = event.target;
+  btn.disabled = true; btn.innerHTML = '<span class="loading-spin"></span>追加中';
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const props = {
+      用語: { title: [{ text: { content: title } }] },
+      情報種別: { select: { name: type } },
+      重要度: { select: { name: imp } },
+      発信済み: { checkbox: false },
+      収集日: { date: { start: today } },
+    };
+    if (desc) props.説明 = { rich_text: [{ text: { content: desc } }] };
+    await notionCreate(DB_INFO, props);
+    document.getElementById('info-title').value = '';
+    document.getElementById('info-desc').value = '';
+    await loadInfo();
+    toast('Notionに追加しました ✓');
+  } catch(e) { toast('追加に失敗しました', 'error'); }
+  btn.disabled = false; btn.textContent = 'Notionに追加';
 }
-init();
+
+// ===== SCHEDULE =====
+let scheduleItems = [];
+
+async function loadSchedule() {
+  try {
+    const results = await notionQuery(DB_SCH, null, [
+      { property: '日時', direction: 'ascending' }
+    ]);
+    scheduleItems = results.map(r => ({
+      id: r.id,
+      title: r.properties.タイトル?.title?.[0]?.plain_text
+           || r.properties.Name?.title?.[0]?.plain_text || '（無題）',
+      date: r.properties.日時?.date?.start
+          || r.properties.日付?.date?.start || '',
+      cat: r.properties.カテゴリ?.select?.name || '仕事',
+    }));
+    renderSchedule();
+  } catch(e) {
+    toast('スケジュールの読み込みに失敗しました', 'error');
+  }
+}
+
+function renderSchedule() {
+  const list = document.getElementById('scheduleList');
+  if (!scheduleItems.length) {
+    list.innerHTML = '<div class="empty">予定なし</div>'; return;
+  }
+  list.innerHTML = scheduleItems.map(s => `
+    <div class="schedule-item" id="sch-${s.id}">
+      <div class="schedule-date">${s.date || '日付なし'}</div>
+      <div class="schedule-title">${escHtml(s.title)}</div>
+      <span class="cat-badge c-${s.cat}">${s.cat}</span>
+      <button class="btn-delete" onclick="deleteSchedule('${s.id}', '${escHtml(s.title)}')">✕</button>
+    </div>
+  `).join('');
+}
+
+async function addSchedule() {
+  const title = document.getElementById('sch-title').value.trim();
+  const date  = document.getElementById('sch-date').value;
+  const cat   = document.getElementById('sch-cat').value;
+  if (!title) { toast('タイトルを入力してください', 'error'); return; }
+
+  const btn = event.target;
+  btn.disabled = true; btn.innerHTML = '<span class="loading-spin"></span>';
+  try {
+    // Try common property name patterns for schedule DB
+    const props = {
+      タイトル: { title: [{ text: { content: title } }] },
+      カテゴリ: { select: { name: cat } },
+    };
+    if (date) props.日時 = { date: { start: date } };
+    await notionCreate(DB_SCH, props);
+    document.getElementById('sch-title').value = '';
+    document.getElementById('sch-date').value = '';
+    await loadSchedule();
+    toast('予定を追加しました ✓');
+  } catch(e) {
+    // Fallback property name
+    try {
+      const props2 = {
+        Name: { title: [{ text: { content: title } }] },
+        カテゴリ: { select: { name: cat } },
+      };
+      if (date) props2.日付 = { date: { start: date } };
+      await notionCreate(DB_SCH, props2);
+      document.getElementById('sch-title').value = '';
+      await loadSchedule();
+      toast('予定を追加しました ✓');
+    } catch(e2) { toast('追加に失敗しました', 'error'); }
+  }
+  btn.disabled = false; btn.textContent = '追加';
+}
+
+function deleteSchedule(id, title) {
+  showDeleteModal(`「${title}」を削除しますか？`, async () => {
+    try {
+      await notionDelete(id);
+      scheduleItems = scheduleItems.filter(s => s.id !== id);
+      renderSchedule();
+      toast('削除しました ✓');
+    } catch(e) { toast('削除に失敗しました', 'error'); }
+  });
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ===== INIT =====
+updateCountdown();
+loadTodos();
 </script>
 </body>
 </html>
