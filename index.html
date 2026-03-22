@@ -8,36 +8,27 @@
 <meta name="apple-mobile-web-app-title" content="マイポータル">
 <title>マイポータル</title>
 <style>
-:root {
-  --bg:#ffffff;--bg2:#f5f5f4;--bg3:#f0efee;
-  --text:#1a1a18;--text2:#6b6b67;--text3:#9c9a92;
-  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
-  --purple:#534AB7;--blue:#185FA5;--teal:#0F6E56;--amber:#854F0B;
-  --green:#1D9E75;--red:#A32D2D;
-}
-@media(prefers-color-scheme:dark){
-  :root{--bg:#1c1c1a;--bg2:#242422;--bg3:#2a2a28;--text:#e8e6de;--text2:#9c9a92;--text3:#6b6b67;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);}
-}
+:root{--bg:#fff;--bg2:#f5f5f4;--bg3:#f0efee;--text:#1a1a18;--text2:#6b6b67;--text3:#9c9a92;--border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);--purple:#534AB7;--blue:#185FA5;--teal:#0F6E56;--amber:#854F0B;--green:#1D9E75;--red:#A32D2D;}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#242422;--bg3:#2a2a28;--text:#e8e6de;--text2:#9c9a92;--text3:#6b6b67;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);}}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh;}
 .app{max-width:900px;margin:0 auto;padding:12px;}
 .header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 12px;gap:8px;flex-wrap:wrap;}
-.htitle{font-size:16px;font-weight:600;}
-.hsub{font-size:11px;color:var(--text3);margin-top:1px;}
+.htitle{font-size:16px;font-weight:600;}.hsub{font-size:11px;color:var(--text3);margin-top:1px;}
 .hbtns{display:flex;gap:6px;align-items:center;}
+.syncinfo{font-size:11px;color:var(--text3);}
 .btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);font-size:12px;cursor:pointer;transition:background .15s;}
-.btn:hover{background:var(--bg2);}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
-.dot.spin{background:#EF9F27;animation:pulse .7s ease-in-out infinite;}
+.btn:hover{background:var(--bg2);}.btn:disabled{opacity:.6;cursor:not-allowed;}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.sdot.spin{background:#EF9F27;animation:pulse .7s ease-in-out infinite;}
+.sdot.err{background:var(--red);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
 .tab{padding:7px 14px;font-size:13px;border-radius:22px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;transition:all .15s;}
 .tab:hover{background:var(--bg2);}
 .tab.on{color:#fff;border-color:transparent;font-weight:500;}
-.tab.t0.on{background:var(--purple);}
-.tab.t1.on{background:var(--blue);}
-.tab.t2.on{background:var(--teal);}
-.tab.t3.on{background:var(--amber);}
+.tab.t0.on{background:var(--purple);}.tab.t1.on{background:var(--blue);}
+.tab.t2.on{background:var(--teal);}.tab.t3.on{background:var(--amber);}
 .pane{display:none;}.pane.on{display:block;}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
 .metric{background:var(--bg);border-radius:12px;padding:12px;border:1px solid var(--border);}
@@ -56,55 +47,47 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .chk{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:all .15s;}
 .chk.done{background:var(--green);border-color:var(--green);}
 .chk.done::after{content:'';display:block;width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);}
+.chk.loading{opacity:.4;pointer-events:none;}
 .itxt{font-size:13px;color:var(--text);line-height:1.45;flex:1;min-width:0;}
 .itxt.done{text-decoration:line-through;color:var(--text3);}
 .isub{font-size:11px;color:var(--text3);}
 .del{font-size:16px;cursor:pointer;color:var(--text3);flex-shrink:0;padding:0 2px;}
 .del:hover{color:var(--red);}
 .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;}
-.bpurple{background:#EEEDFE;color:#3C3489;}
-.bblue{background:#E6F1FB;color:#0C447C;}
-.bteal{background:#E1F5EE;color:#085041;}
-.bamber{background:#FAEEDA;color:#633806;}
-.bred{background:#FCEBEB;color:#791F1F;}
-.bgray{background:#F1EFE8;color:#444441;}
+.bpurple{background:#EEEDFE;color:#3C3489;}.bblue{background:#E6F1FB;color:#0C447C;}
+.bteal{background:#E1F5EE;color:#085041;}.bamber{background:#FAEEDA;color:#633806;}
+.bred{background:#FCEBEB;color:#791F1F;}.bgray{background:#F1EFE8;color:#444441;}
 .bgreen{background:#EAF3DE;color:#27500A;}
 @media(prefers-color-scheme:dark){
-  .bpurple{background:#2a2460;color:#AFA9EC;}
-  .bblue{background:#0a2a4a;color:#85B7EB;}
-  .bteal{background:#0a2e24;color:#5DCAA5;}
-  .bamber{background:#3a2a0a;color:#EF9F27;}
-  .bred{background:#3a1010;color:#F09595;}
-  .bgray{background:#2a2a28;color:#B4B2A9;}
+  .bpurple{background:#2a2460;color:#AFA9EC;}.bblue{background:#0a2a4a;color:#85B7EB;}
+  .bteal{background:#0a2e24;color:#5DCAA5;}.bamber{background:#3a2a0a;color:#EF9F27;}
+  .bred{background:#3a1010;color:#F09595;}.bgray{background:#2a2a28;color:#B4B2A9;}
   .bgreen{background:#0a2a1a;color:#97C459;}
 }
 .dchip{font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0;margin-top:2px;}
 .dchip.urg{color:var(--red);font-weight:600;}
 .irow{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
 .irow input,.irow select{padding:8px 10px;border:1px solid var(--border2);border-radius:10px;background:var(--bg);color:var(--text);font-size:13px;outline:none;}
+.irow input:focus,.irow select:focus{border-color:var(--blue);}
 .irow input{flex:1;min-width:100px;}
-.irow button{padding:8px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;}
-.irow button:hover{background:var(--bg3);}
+.irow button{padding:8px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;}
+.irow button:hover{background:var(--bg3);}.irow button:disabled{opacity:.5;cursor:not-allowed;}
 .mcats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
 .mcat{padding:5px 12px;font-size:12px;border-radius:16px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
 .mcat.on{background:var(--blue);color:#fff;border-color:var(--blue);}
 .empty{text-align:center;padding:20px;color:var(--text3);font-size:13px;}
-.loading{text-align:center;padding:16px;color:var(--text3);font-size:12px;}
-.sync-info{font-size:11px;color:var(--text3);padding:2px 4px;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast.show{opacity:1;}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
-    <div>
-      <div class="htitle">マイポータル</div>
-      <div class="hsub" id="today-label"></div>
-    </div>
+    <div><div class="htitle">マイポータル</div><div class="hsub" id="today-label"></div></div>
     <div class="hbtns">
-      <span class="sync-info" id="sync-time"></span>
-      <button class="btn" id="sync-btn" onclick="syncNotion()">
-        <span class="dot" id="sdot"></span>
-        <span id="slbl">Notionと同期</span>
+      <span class="syncinfo" id="sync-time"></span>
+      <button class="btn" id="sync-btn" onclick="syncAll()">
+        <span class="sdot" id="sdot"></span><span id="slbl">Notionと同期</span>
       </button>
     </div>
   </div>
@@ -116,7 +99,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="tab t3" onclick="sw(3)">スケジュール</button>
   </div>
 
-  <!-- Tab0 -->
   <div class="pane on" id="pane0">
     <div class="metrics" id="m0"></div>
     <div class="two">
@@ -141,31 +123,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <!-- Tab1 -->
   <div class="pane" id="pane1">
     <div class="two">
       <div>
         <div class="shdr"><span class="stitle">仕事のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
         <div class="card" id="task-s"></div>
         <div class="irow">
-          <input id="ni-s" type="text" placeholder="仕事タスクを追加…" onkeydown="if(event.key==='Enter')addLocalTask('s')">
+          <input id="ni-s" type="text" placeholder="仕事タスクを追加…" onkeydown="if(event.key==='Enter')addTask('仕事')">
           <select id="pri-s"><option>高</option><option selected>中</option><option>低</option></select>
-          <button onclick="addLocalTask('s')">追加</button>
+          <button id="btn-s" onclick="addTask('仕事')">追加</button>
         </div>
       </div>
       <div>
         <div class="shdr"><span class="stitle">個人のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
         <div class="card" id="task-k"></div>
         <div class="irow">
-          <input id="ni-k" type="text" placeholder="個人タスクを追加…" onkeydown="if(event.key==='Enter')addLocalTask('k')">
+          <input id="ni-k" type="text" placeholder="個人タスクを追加…" onkeydown="if(event.key==='Enter')addTask('個人')">
           <select id="pri-k"><option>高</option><option selected>中</option><option>低</option></select>
-          <button onclick="addLocalTask('k')">追加</button>
+          <button id="btn-k" onclick="addTask('個人')">追加</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Tab2 -->
   <div class="pane" id="pane2">
     <div class="mcats" id="mcats"></div>
     <div id="memo-list"></div>
@@ -177,17 +157,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <!-- Tab3 -->
   <div class="pane" id="pane3">
     <div class="two">
       <div>
         <div class="shdr"><span class="stitle">直近の予定</span><a class="nlink" href="https://www.notion.so/5abb5d373eb34b23895d7879a57618d4" target="_blank">Notionで管理</a></div>
         <div class="card" id="sch-list"></div>
         <div class="irow">
-          <input id="sch-t" type="text" placeholder="予定タイトル…" onkeydown="if(event.key==='Enter')addLocalSch()">
+          <input id="sch-t" type="text" placeholder="予定タイトル…" onkeydown="if(event.key==='Enter')addSch()">
           <input id="sch-d" type="date" style="width:130px;flex-shrink:0;">
           <select id="sch-c" style="flex-shrink:0;"><option>仕事</option><option>転職</option><option>個人</option></select>
-          <button onclick="addLocalSch()">追加</button>
+          <button id="btn-sch" onclick="addSch()">追加</button>
         </div>
       </div>
       <div>
@@ -197,16 +176,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ── 設定 ─────────────────────────────────
-const NOTION_TOKEN = 'ntn_V46092302432x0V2m9PzBKX1AekFAq3EFxDFvKgG9Sz1zZ';
-const TASK_DB = 'dc754a0d0b70477582f4e7b2fc8e3f73';
-const SCH_DB  = '5abb5d373eb34b23895d7879a57618d4';
-const PROXY   = 'https://notion-proxy.yosukenakamurayg-star.workers.dev';
+const TOKEN  = 'ntn_V46092302432x0V2m9PzBKX1AekFAq3EFxDFvKgG9Sz1zZ';
+const PROXY  = 'https://notion-proxy.yosuke-nakamura-yg.workers.dev';
+const TASK_DB= 'dc754a0d-0b70-4775-82f4-e7b2fc8e3f73';
+const SCH_DB = '5abb5d37-3eb3-4b23-895d-7879a57618d4';
 
-// ── ローカルデータ（固定 + ローカル保存）────
-const FIXED = {
+const FIXED={
   weekTodos:[
     {text:'上司に退職の意思を口頭で伝える（3/17済）',done:true},
     {text:'就業規則で退職申告の必要期間を確認',done:false},
@@ -215,12 +193,9 @@ const FIXED = {
     {text:'卒業証明書（日本語・英文）を転職先に送付',done:true},
   ],
   docs:[
-    {name:'履歴書',status:'送付済み',ok:true},
-    {name:'源泉徴収票',status:'送付済み',ok:true},
-    {name:'卒業証明書（日本語）',status:'送付済み',ok:true},
-    {name:'卒業証明書（英文）',status:'送付済み',ok:true},
-    {name:'オファーレター',status:'3月末受取予定',ok:false},
-    {name:'退職届',status:'準備中',ok:false},
+    {name:'履歴書',status:'送付済み',ok:true},{name:'源泉徴収票',status:'送付済み',ok:true},
+    {name:'卒業証明書（日本語）',status:'送付済み',ok:true},{name:'卒業証明書（英文）',status:'送付済み',ok:true},
+    {name:'オファーレター',status:'3月末受取予定',ok:false},{name:'退職届',status:'準備中',ok:false},
     {name:'身元保証書',status:'未着手',ok:false},
   ],
   milestones:[
@@ -257,180 +232,205 @@ const FIXED = {
   ]
 };
 
-const KEY = 'portal_v2';
-function ls(){ try{const d=localStorage.getItem(KEY);return d?JSON.parse(d):{memos:JSON.parse(JSON.stringify(FIXED.memos)),weekTodos:JSON.parse(JSON.stringify(FIXED.weekTodos))};}catch{return{memos:JSON.parse(JSON.stringify(FIXED.memos)),weekTodos:JSON.parse(JSON.stringify(FIXED.weekTodos))};}}
-function ss(){ try{localStorage.setItem(KEY,JSON.stringify(LS));}catch{} }
-let LS = ls();
+const LS_KEY='portal_v3';
+function loadLS(){try{const d=localStorage.getItem(LS_KEY);return d?JSON.parse(d):{memos:JSON.parse(JSON.stringify(FIXED.memos))};}catch{return{memos:JSON.parse(JSON.stringify(FIXED.memos))};}}
+function saveLS(){try{localStorage.setItem(LS_KEY,JSON.stringify(LS));}catch{}}
+let LS=loadLS();
+let nTasks={s:[],k:[]};
+let nScheds=[];
 
-// Notionから取得したデータ
-let notionTasks = {s:[], k:[]};
-let notionScheds = [];
-
-// ── ユーティリティ ────────────────────────
-const TODAY = new Date(); TODAY.setHours(0,0,0,0);
-function daysUntil(d){ const t=new Date(d); t.setHours(0,0,0,0); return Math.ceil((t-TODAY)/86400000); }
-function dlabel(d){ const n=daysUntil(d); if(n<0)return '期限超過'; if(n===0)return '今日'; if(n===1)return '明日'; const dt=new Date(d); return(dt.getMonth()+1)+'/'+(dt.getDate()); }
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+function daysUntil(d){const t=new Date(d);t.setHours(0,0,0,0);return Math.ceil((t-TODAY)/86400000);}
+function dlabel(d){const n=daysUntil(d);if(n<0)return '期限超過';if(n===0)return '今日';if(n===1)return '明日';const dt=new Date(d);return(dt.getMonth()+1)+'/'+(dt.getDate());}
 const catColor={仕事:'bblue',転職:'bpurple',個人:'bteal',英語業務:'bblue',VM製品:'bteal',防衛省:'bamber',Office:'bgray'};
 const priColor={高:'bred',中:'bamber',低:'bgray'};
 
-// ── Notion API（CORSプロキシ経由）──────────
-async function notionQuery(dbId, filter){
-  const url = `https://api.notion.com/v1/databases/${dbId}/query`;
-  try {
-    const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`, {
-      method:'POST',
-      headers:{
-        'Authorization':'Bearer '+NOTION_TOKEN,
-        'Notion-Version':'2022-06-28',
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify(filter||{page_size:50})
-    });
-    if(!res.ok) return null;
-    return await res.json();
-  } catch(e){ return null; }
+let toastTimer=null;
+function toast(msg,dur=2200){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),dur);
 }
 
-function extractText(prop){
-  if(!prop) return '';
-  if(prop.type==='title') return prop.title.map(t=>t.plain_text).join('');
-  if(prop.type==='rich_text') return prop.rich_text.map(t=>t.plain_text).join('');
-  return '';
+async function nFetch(path,method='GET',body=null){
+  const res=await fetch(PROXY+'/notion'+path,{
+    method,
+    headers:{'Authorization':'Bearer '+TOKEN,'Notion-Version':'2022-06-28','Content-Type':'application/json'},
+    body:body?JSON.stringify(body):undefined
+  });
+  if(!res.ok){const t=await res.text();throw new Error(res.status+': '+t);}
+  return res.json();
 }
-function extractSelect(prop){ return prop?.select?.name||''; }
-function extractDate(prop){ return prop?.date?.start||''; }
-function extractStatus(prop){ return prop?.status?.name||''; }
 
-async function syncNotion(){
+async function syncAll(){
   const dot=document.getElementById('sdot');
   const lbl=document.getElementById('slbl');
-  dot.classList.add('spin'); lbl.textContent='同期中…';
-
-  // タスクDB取得
-  const taskRes = await notionQuery(TASK_DB);
-  if(taskRes && taskRes.results){
-    const s=[], k=[];
-    taskRes.results.forEach(p=>{
-      const props = p.properties;
-      const name = extractText(props['Name']);
-      const cat  = extractSelect(props['カテゴリ']);
-      const pri  = extractSelect(props['優先度']) || '中';
-      const status = extractSelect(props['ステータス']) || extractStatus(props['ステータス']);
-      const done = status === '完了 🙌';
-      if(!name) return;
-      const item = {text:name, done, pri, id:p.id};
-      if(cat==='個人') k.push(item);
-      else s.push(item);
+  const btn=document.getElementById('sync-btn');
+  dot.className='sdot spin';lbl.textContent='同期中…';btn.disabled=true;
+  try{
+    const tr=await nFetch('/v1/databases/'+TASK_DB+'/query','POST',{page_size:50});
+    const s=[],k=[];
+    (tr.results||[]).forEach(p=>{
+      const pr=p.properties;
+      const name=(pr['Name']?.title||[]).map(t=>t.plain_text).join('');
+      if(!name)return;
+      const cat=pr['カテゴリ']?.select?.name||'仕事';
+      const pri=pr['優先度']?.select?.name||'中';
+      const done=pr['ステータス']?.select?.name==='完了 🙌';
+      (cat==='個人'?k:s).push({text:name,done,pri,id:p.id});
     });
-    notionTasks = {s, k};
+    nTasks={s,k};
+
+    const sr=await nFetch('/v1/databases/'+SCH_DB+'/query','POST',{page_size:50});
+    nScheds=(sr.results||[]).map(p=>{
+      const pr=p.properties;
+      const title=(pr['タイトル']?.title||[]).map(t=>t.plain_text).join('');
+      const date=pr['日付']?.date?.start||'';
+      const cat=pr['カテゴリ']?.select?.name||'仕事';
+      return title&&date?{title,date,cat,id:p.id}:null;
+    }).filter(Boolean).sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+    dot.className='sdot';lbl.textContent='Notionと同期';
+    const now=new Date();
+    document.getElementById('sync-time').textContent=`${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 同期済み`;
+    toast('Notionと同期しました');
+  }catch(e){
+    dot.className='sdot err';lbl.textContent='同期失敗';
+    toast('同期失敗: '+e.message,4000);
   }
-
-  // スケジュールDB取得
-  const schRes = await notionQuery(SCH_DB);
-  if(schRes && schRes.results){
-    notionScheds = schRes.results
-      .map(p=>{
-        const props = p.properties;
-        const title = extractText(props['タイトル']);
-        const date  = extractDate(props['日付']);
-        const cat   = extractSelect(props['カテゴリ']) || '仕事';
-        if(!title || !date) return null;
-        return {title, date, cat, id:p.id};
-      })
-      .filter(Boolean)
-      .sort((a,b)=>new Date(a.date)-new Date(b.date));
-  }
-
-  dot.classList.remove('spin');
-  lbl.textContent='Notionと同期';
-  const now = new Date();
-  document.getElementById('sync-time').textContent =
-    `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')} 同期済み`;
-
+  btn.disabled=false;
   renderAll();
 }
 
-// ── タブ ──────────────────────────────────
+async function addTask(cat){
+  const key=cat==='個人'?'k':'s';
+  const inp=document.getElementById('ni-'+key);
+  const val=inp.value.trim();
+  if(!val)return;
+  const pri=document.getElementById('pri-'+key).value;
+  const btn=document.getElementById('btn-'+key);
+  btn.disabled=true;btn.textContent='追加中…';
+  try{
+    const res=await nFetch('/v1/pages','POST',{
+      parent:{database_id:TASK_DB},
+      properties:{
+        'Name':{title:[{text:{content:val}}]},
+        'カテゴリ':{select:{name:cat}},
+        '優先度':{select:{name:pri}},
+        'ステータス':{select:{name:'未着手'}}
+      }
+    });
+    nTasks[key].unshift({text:val,done:false,pri,id:res.id});
+    inp.value='';
+    toast('Notionにタスクを追加しました');
+    renderTasks();
+  }catch(e){toast('追加失敗: '+e.message,4000);}
+  btn.disabled=false;btn.textContent='追加';
+}
+
+async function toggleTask(key,idx){
+  const task=nTasks[key][idx];
+  const newDone=!task.done;
+  const chk=document.querySelector(`[data-key="${key}"][data-idx="${idx}"]`);
+  if(chk)chk.classList.add('loading');
+  try{
+    await nFetch('/v1/pages/'+task.id,'PATCH',{
+      properties:{'ステータス':{select:{name:newDone?'完了 🙌':'未着手'}}}
+    });
+    nTasks[key][idx].done=newDone;
+    toast(newDone?'完了にしました':'未着手に戻しました');
+    renderTasks();
+  }catch(e){
+    toast('更新失敗: '+e.message,4000);
+    if(chk)chk.classList.remove('loading');
+  }
+}
+
+async function addSch(){
+  const t=document.getElementById('sch-t').value.trim();
+  const d=document.getElementById('sch-d').value;
+  const c=document.getElementById('sch-c').value;
+  if(!t||!d){toast('タイトルと日付を入力してください');return;}
+  const btn=document.getElementById('btn-sch');
+  btn.disabled=true;btn.textContent='追加中…';
+  try{
+    const res=await nFetch('/v1/pages','POST',{
+      parent:{database_id:SCH_DB},
+      properties:{
+        'タイトル':{title:[{text:{content:t}}]},
+        '日付':{date:{start:d}},
+        'カテゴリ':{select:{name:c}},
+        'ステータス':{select:{name:'予定'}}
+      }
+    });
+    nScheds.push({title:t,date:d,cat:c,id:res.id});
+    nScheds.sort((a,b)=>new Date(a.date)-new Date(b.date));
+    document.getElementById('sch-t').value='';
+    toast('Notionにスケジュールを追加しました');
+    renderSch();
+  }catch(e){toast('追加失敗: '+e.message,4000);}
+  btn.disabled=false;btn.textContent='追加';
+}
+
 function sw(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',i===j));
 }
 
-// ── Tab0 ──────────────────────────────────
 function renderMetrics(){
-  const wDone = LS.weekTodos.filter(t=>t.done).length;
-  const dIn = Math.max(0,daysUntil('2026-06-01'));
-  const dQ  = Math.max(0,daysUntil('2026-05-30'));
+  const wDone=FIXED.weekTodos.filter(t=>t.done).length;
   document.getElementById('m0').innerHTML=`
-    <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${dIn}</div><div class="msub">日</div></div>
-    <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${dQ}</div><div class="msub">日</div></div>
+    <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${Math.max(0,daysUntil('2026-06-01'))}</div><div class="msub">日</div></div>
+    <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${Math.max(0,daysUntil('2026-05-30'))}</div><div class="msub">日</div></div>
     <div class="metric"><div class="mlabel">書類提出</div><div class="mval">${FIXED.docs.filter(d=>d.ok).length}</div><div class="msub">/ ${FIXED.docs.length}件</div></div>
-    <div class="metric"><div class="mlabel">今週TODO</div><div class="mval">${wDone}</div><div class="msub">/ ${LS.weekTodos.length}完了</div></div>`;
+    <div class="metric"><div class="mlabel">今週TODO</div><div class="mval">${wDone}</div><div class="msub">/ ${FIXED.weekTodos.length}完了</div></div>`;
 }
 function renderWeek(){
-  document.getElementById('week-list').innerHTML = LS.weekTodos.map((t,i)=>`
-    <div class="row">
-      <div class="chk ${t.done?'done':''}" onclick="LS.weekTodos[${i}].done=!LS.weekTodos[${i}].done;ss();renderWeek();renderMetrics();"></div>
-      <span class="itxt ${t.done?'done':''}">${t.text}</span>
-    </div>`).join('');
+  document.getElementById('week-list').innerHTML=FIXED.weekTodos.map(t=>`
+    <div class="row"><div class="chk ${t.done?'done':''}"></div><span class="itxt ${t.done?'done':''}">${t.text}</span></div>`).join('');
 }
 function renderDocs(){
-  document.getElementById('doc-list').innerHTML = FIXED.docs.map(d=>`
+  document.getElementById('doc-list').innerHTML=FIXED.docs.map(d=>`
     <div class="row"><span class="itxt">${d.name}</span><span class="badge ${d.ok?'bgreen':'bamber'}">${d.status}</span></div>`).join('');
 }
 function renderMilestones(){
-  document.getElementById('mile-list').innerHTML = [...FIXED.milestones]
-    .sort((a,b)=>new Date(a.date)-new Date(b.date))
-    .map(m=>`<div class="row"><span class="itxt">${m.title}</span><span class="dchip ${m.urgent?'urg':''}">${dlabel(m.date)}</span></div>`).join('');
+  document.getElementById('mile-list').innerHTML=[...FIXED.milestones].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(m=>`
+    <div class="row"><span class="itxt">${m.title}</span><span class="dchip ${m.urgent?'urg':''}">${dlabel(m.date)}</span></div>`).join('');
 }
 
-// ── Tab1（Notionデータ使用）──────────────
 function renderTasks(){
-  ['s','k'].forEach(k=>{
-    const id = k==='s'?'task-s':'task-k';
-    const arr = notionTasks[k];
-    if(arr.length===0){
-      document.getElementById(id).innerHTML='<div class="empty">Notionと同期してください</div>';
-      return;
-    }
-    document.getElementById(id).innerHTML = arr.map((t,i)=>`
-      <div class="row">
-        <div class="chk ${t.done?'done':''}"></div>
-        <div style="flex:1;min-width:0;"><div class="itxt ${t.done?'done':''}">${t.text}</div></div>
-        <span class="badge ${priColor[t.pri]||'bgray'}">${t.pri}</span>
-      </div>`).join('');
+  ['s','k'].forEach(key=>{
+    const arr=nTasks[key];
+    document.getElementById('task-'+key).innerHTML=arr.length
+      ?arr.map((t,i)=>`
+        <div class="row">
+          <div class="chk ${t.done?'done':''}" data-key="${key}" data-idx="${i}" onclick="toggleTask('${key}',${i})"></div>
+          <div style="flex:1;min-width:0;"><div class="itxt ${t.done?'done':''}">${t.text}</div></div>
+          <span class="badge ${priColor[t.pri]||'bgray'}">${t.pri}</span>
+        </div>`).join('')
+      :'<div class="empty">Notionと同期してください</div>';
   });
 }
-function addLocalTask(k){
-  const v=document.getElementById('ni-'+k).value.trim();
-  const p=document.getElementById('pri-'+k).value;
-  if(!v)return;
-  notionTasks[k].unshift({text:v,done:false,pri:p});
-  document.getElementById('ni-'+k).value='';
-  renderTasks();
-}
 
-// ── Tab2 ──────────────────────────────────
 let memoFilter='all';
 function renderMemoCats(){
-  const cats=['all','英語業務','VM製品','防衛省','Office'];
-  document.getElementById('mcats').innerHTML = cats.map(c=>`
+  document.getElementById('mcats').innerHTML=['all','英語業務','VM製品','防衛省','Office'].map(c=>`
     <button class="mcat ${memoFilter===c?'on':''}" onclick="memoFilter='${c}';renderMemoCats();renderMemos();">${c==='all'?'すべて':c}</button>`).join('');
 }
 function renderMemos(){
-  const list = memoFilter==='all' ? LS.memos : LS.memos.filter(m=>m.cat===memoFilter);
-  document.getElementById('memo-list').innerHTML = list.length
-    ? list.map(m=>{
-        const i=LS.memos.indexOf(m);
-        return `<div class="card" style="padding:10px 14px;margin-bottom:7px;display:flex;align-items:center;gap:8px;">
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;font-weight:500;color:var(--text);">${m.en}</div>
-            <div class="isub">${m.ja}</div>
-          </div>
-          <span class="badge ${catColor[m.cat]||'bgray'}">${m.cat}</span>
-          <span class="del" onclick="LS.memos.splice(${i},1);ss();renderMemos();">×</span>
-        </div>`;}).join('')
-    : '<div class="empty">メモなし</div>';
+  const list=memoFilter==='all'?LS.memos:LS.memos.filter(m=>m.cat===memoFilter);
+  document.getElementById('memo-list').innerHTML=list.length
+    ?list.map(m=>{const i=LS.memos.indexOf(m);return`
+      <div class="card" style="padding:10px 14px;margin-bottom:7px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:500;color:var(--text);">${m.en}</div>
+          <div class="isub">${m.ja}</div>
+        </div>
+        <span class="badge ${catColor[m.cat]||'bgray'}">${m.cat}</span>
+        <span class="del" onclick="LS.memos.splice(${i},1);saveLS();renderMemos();">×</span>
+      </div>`;}).join('')
+    :'<div class="empty">メモなし</div>';
 }
 function addMemo(){
   const en=document.getElementById('m-en').value.trim();
@@ -440,51 +440,30 @@ function addMemo(){
   LS.memos.unshift({en,ja,cat});
   document.getElementById('m-en').value='';
   document.getElementById('m-ja').value='';
-  ss(); renderMemos();
+  saveLS();renderMemos();toast('メモを追加しました');
 }
 
-// ── Tab3（Notionデータ使用）──────────────
 function renderSch(){
-  if(notionScheds.length===0){
-    document.getElementById('sch-list').innerHTML='<div class="empty">Notionと同期してください</div>';
-  } else {
-    document.getElementById('sch-list').innerHTML = notionScheds.map(s=>`
+  document.getElementById('sch-list').innerHTML=nScheds.length
+    ?nScheds.map(s=>`
       <div class="row">
         <div class="itxt">${s.title}</div>
         <span class="badge ${catColor[s.cat]||'bgray'}">${s.cat}</span>
         <span class="dchip">${dlabel(s.date)}</span>
-      </div>`).join('');
-  }
-  document.getElementById('dead-list').innerHTML = [...FIXED.deadlines]
-    .sort((a,b)=>new Date(a.date)-new Date(b.date))
-    .map(d=>`<div class="row"><div class="itxt">${d.title}</div><span class="dchip ${d.urgent?'urg':''}">${dlabel(d.date)}</span></div>`).join('');
-}
-function addLocalSch(){
-  const t=document.getElementById('sch-t').value.trim();
-  const d=document.getElementById('sch-d').value;
-  const c=document.getElementById('sch-c').value;
-  if(!t||!d)return;
-  notionScheds.push({title:t,date:d,cat:c});
-  notionScheds.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  document.getElementById('sch-t').value='';
-  renderSch();
+      </div>`).join('')
+    :'<div class="empty">Notionと同期してください</div>';
+  document.getElementById('dead-list').innerHTML=[...FIXED.deadlines].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(d=>`
+    <div class="row"><div class="itxt">${d.title}</div><span class="dchip ${d.urgent?'urg':''}">${dlabel(d.date)}</span></div>`).join('');
 }
 
-function renderAll(){
-  renderMetrics(); renderWeek(); renderDocs(); renderMilestones();
-  renderTasks();
-  renderMemoCats(); renderMemos();
-  renderSch();
-}
+function renderAll(){renderMetrics();renderWeek();renderDocs();renderMilestones();renderTasks();renderMemoCats();renderMemos();renderSch();}
 
-// ── 初期化 ────────────────────────────────
 function init(){
   const d=new Date();
-  document.getElementById('today-label').textContent=
-    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
+  document.getElementById('today-label').textContent=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${'日月火水木金土'[d.getDay()]}）`;
   document.getElementById('sch-d').valueAsDate=new Date();
   renderAll();
-  syncNotion();
+  syncAll();
 }
 init();
 </script>
