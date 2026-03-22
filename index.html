@@ -8,32 +8,34 @@
 <meta name="apple-mobile-web-app-title" content="マイポータル">
 <title>マイポータル</title>
 <style>
-:root{--bg:#fff;--bg2:#f5f5f4;--bg3:#f0efee;--text:#1a1a18;--text2:#6b6b67;--text3:#9c9a92;--border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);--purple:#534AB7;--blue:#185FA5;--teal:#0F6E56;--amber:#854F0B;--green:#1D9E75;--red:#A32D2D;}
+:root{--bg:#fff;--bg2:#f5f5f4;--bg3:#f0efee;--text:#1a1a18;--text2:#6b6b67;--text3:#9c9a92;--border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);--purple:#534AB7;--blue:#185FA5;--teal:#0F6E56;--amber:#854F0B;--green:#1D9E75;--red:#A32D2D;--tabbar:56px;}
 @media(prefers-color-scheme:dark){:root{--bg:#1c1c1a;--bg2:#242422;--bg3:#2a2a28;--text:#e8e6de;--text2:#9c9a92;--text3:#6b6b67;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);}}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh;}
-.app{max-width:900px;margin:0 auto;padding:12px;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 12px;gap:8px;flex-wrap:wrap;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh;padding-bottom:var(--tabbar);}
+.app{max-width:900px;margin:0 auto;padding:12px 12px 0;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 10px;gap:8px;flex-wrap:wrap;}
 .htitle{font-size:16px;font-weight:600;}.hsub{font-size:11px;color:var(--text3);margin-top:1px;}
 .hbtns{display:flex;gap:6px;align-items:center;}
 .syncinfo{font-size:11px;color:var(--text3);}
-.btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);font-size:12px;cursor:pointer;transition:background .15s;}
-.btn:hover{background:var(--bg2);}.btn:disabled{opacity:.6;cursor:not-allowed;}
+.btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);font-size:12px;cursor:pointer;}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
 .sdot{width:7px;height:7px;border-radius:50%;background:var(--green);}
 .sdot.spin{background:#EF9F27;animation:pulse .7s ease-in-out infinite;}
 .sdot.err{background:var(--red);}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
-.tab{padding:7px 14px;font-size:13px;border-radius:22px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;transition:all .15s;}
-.tab:hover{background:var(--bg2);}
-.tab.on{color:#fff;border-color:transparent;font-weight:500;}
-.tab.t0.on{background:var(--purple);}.tab.t1.on{background:var(--blue);}
-.tab.t2.on{background:var(--teal);}.tab.t3.on{background:var(--amber);}
+/* ─ 下部タブバー ─ */
+.tabbar{position:fixed;bottom:0;left:0;right:0;height:var(--tabbar);background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;}
+.tbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);font-size:10px;padding:4px 0;border:none;background:none;transition:color .15s;}
+.tbtn.on{color:var(--purple);}
+.tbtn.on.t1{color:var(--blue);}
+.tbtn.on.t2{color:var(--teal);}
+.tbtn.on.t3{color:var(--amber);}
+.tbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .pane{display:none;}.pane.on{display:block;}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
 .metric{background:var(--bg);border-radius:12px;padding:12px;border:1px solid var(--border);}
 .mlabel{font-size:11px;color:var(--text3);margin-bottom:2px;}
-.mval{font-size:24px;font-weight:600;color:var(--text);line-height:1.1;}
+.mval{font-size:22px;font-weight:600;color:var(--text);line-height:1.1;}
 .msub{font-size:11px;color:var(--text3);}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
 @media(max-width:600px){.two{grid-template-columns:1fr;}.metrics{grid-template-columns:repeat(2,1fr);}}
@@ -41,7 +43,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .stitle{font-size:13px;font-weight:600;}
 .nlink{font-size:11px;color:var(--blue);text-decoration:none;padding:3px 8px;border-radius:8px;border:1px solid rgba(24,95,165,0.3);}
-.nlink:hover{background:rgba(24,95,165,0.08);}
 .row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);}
 .row:last-child{border-bottom:none;}
 .chk{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:all .15s;}
@@ -51,8 +52,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .itxt{font-size:13px;color:var(--text);line-height:1.45;flex:1;min-width:0;}
 .itxt.done{text-decoration:line-through;color:var(--text3);}
 .isub{font-size:11px;color:var(--text3);}
-.del{font-size:16px;cursor:pointer;color:var(--text3);flex-shrink:0;padding:0 2px;}
-.del:hover{color:var(--red);}
 .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap;flex-shrink:0;}
 .bpurple{background:#EEEDFE;color:#3C3489;}.bblue{background:#E6F1FB;color:#0C447C;}
 .bteal{background:#E1F5EE;color:#085041;}.bamber{background:#FAEEDA;color:#633806;}
@@ -71,12 +70,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .irow input:focus,.irow select:focus{border-color:var(--blue);}
 .irow input{flex:1;min-width:100px;}
 .irow button{padding:8px 14px;border-radius:10px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap;}
-.irow button:hover{background:var(--bg3);}.irow button:disabled{opacity:.5;cursor:not-allowed;}
+.irow button:disabled{opacity:.5;cursor:not-allowed;}
+.filter-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.ftab{padding:4px 11px;font-size:12px;border-radius:14px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
+.ftab.on{background:var(--blue);color:#fff;border-color:var(--blue);}
 .mcats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
 .mcat{padding:5px 12px;font-size:12px;border-radius:16px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;}
 .mcat.on{background:var(--blue);color:#fff;border-color:var(--blue);}
 .empty{text-align:center;padding:20px;color:var(--text3);font-size:13px;}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
+.toast{position:fixed;bottom:calc(var(--tabbar) + 10px);left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;white-space:nowrap;}
 .toast.show{opacity:1;}
 </style>
 </head>
@@ -92,13 +94,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <div class="tabs">
-    <button class="tab t0 on" onclick="sw(0)">Broadcom準備</button>
-    <button class="tab t1" onclick="sw(1)">TODO</button>
-    <button class="tab t2" onclick="sw(2)">学習メモ</button>
-    <button class="tab t3" onclick="sw(3)">スケジュール</button>
-  </div>
-
+  <!-- Tab0: Broadcom準備 -->
   <div class="pane on" id="pane0">
     <div class="metrics" id="m0"></div>
     <div class="two">
@@ -123,7 +119,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
+  <!-- Tab1: TODO -->
   <div class="pane" id="pane1">
+    <div class="filter-tabs" id="todo-filter"></div>
     <div class="two">
       <div>
         <div class="shdr"><span class="stitle">仕事のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
@@ -144,8 +142,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
     </div>
+    <div style="margin-top:10px;">
+      <div class="shdr"><span class="stitle">転職関連のTODO</span><a class="nlink" href="https://www.notion.so/dc754a0d0b70477582f4e7b2fc8e3f73" target="_blank">Notionで管理</a></div>
+      <div class="card" id="task-t"></div>
+      <div class="irow">
+        <input id="ni-t" type="text" placeholder="転職タスクを追加…" onkeydown="if(event.key==='Enter')addTask('転職')">
+        <select id="pri-t"><option>高</option><option selected>中</option><option>低</option></select>
+        <button id="btn-t" onclick="addTask('転職')">追加</button>
+      </div>
+    </div>
   </div>
 
+  <!-- Tab2: 学習メモ -->
   <div class="pane" id="pane2">
     <div class="mcats" id="mcats"></div>
     <div id="memo-list"></div>
@@ -157,6 +165,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
+  <!-- Tab3: スケジュール -->
   <div class="pane" id="pane3">
     <div class="two">
       <div>
@@ -176,6 +185,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 </div>
+
+<!-- 下部タブバー -->
+<div class="tabbar">
+  <button class="tbtn t0 on" onclick="sw(0)" id="tb0">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>準備</span>
+  </button>
+  <button class="tbtn t1" onclick="sw(1)" id="tb1">
+    <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span>TODO</span>
+  </button>
+  <button class="tbtn t2" onclick="sw(2)" id="tb2">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span>学習</span>
+  </button>
+  <button class="tbtn t3" onclick="sw(3)" id="tb3">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span>スケジュール</span>
+  </button>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -218,6 +248,10 @@ const FIXED={
     {en:'Out of Office (OOO)',ja:'不在通知の自動返信メール',cat:'英語業務'},
     {en:'Tentative',ja:'会議招待への「仮承諾」',cat:'英語業務'},
     {en:'CC / BCC',ja:'CC=全員に見える、BCC=非公開の写し',cat:'英語業務'},
+    {en:'Inbox',ja:'受信トレイ',cat:'英語業務'},
+    {en:'Reply / Reply All',ja:'返信 / 全員に返信（Reply Allは注意）',cat:'英語業務'},
+    {en:'Draft',ja:'下書き',cat:'英語業務'},
+    {en:'Attachment',ja:'添付ファイル',cat:'英語業務'},
     {en:'VCF（VMware Cloud Foundation）',ja:'VMware主力の統合プラットフォーム',cat:'VM製品'},
     {en:'vSphere',ja:'仮想化基盤。ESXiホスト管理',cat:'VM製品'},
     {en:'NSX',ja:'ネットワーク仮想化製品',cat:'VM製品'},
@@ -229,14 +263,31 @@ const FIXED={
     {en:'Save / Save As',ja:'上書き保存 Ctrl+S / 名前を付けて保存 Ctrl+Shift+S',cat:'Office'},
     {en:'Track Changes',ja:'変更履歴の記録 Ctrl+Shift+E',cat:'Office'},
     {en:'Paste Special',ja:'形式を選択して貼り付け Ctrl+Alt+V',cat:'Office'},
+    {en:'Undo / Redo',ja:'元に戻す Ctrl+Z / やり直す Ctrl+Y',cat:'Office'},
+    {en:'Format Painter',ja:'書式のコピー貼り付け（ブラシアイコン）',cat:'Office'},
   ]
 };
 
-const LS_KEY='portal_v3';
-function loadLS(){try{const d=localStorage.getItem(LS_KEY);return d?JSON.parse(d):{memos:JSON.parse(JSON.stringify(FIXED.memos))};}catch{return{memos:JSON.parse(JSON.stringify(FIXED.memos))};}}
+const LS_KEY='portal_v4';
+function loadLS(){
+  try{
+    const d=localStorage.getItem(LS_KEY);
+    if(d) return JSON.parse(d);
+    // 旧バージョンからメモを引き継ぐ
+    const old=localStorage.getItem('portal_v3')||localStorage.getItem('portal_v2')||localStorage.getItem('yosuke_portal_v1');
+    if(old){
+      const parsed=JSON.parse(old);
+      if(parsed.memos&&parsed.memos.length>0) return {memos:parsed.memos};
+    }
+    return {memos:JSON.parse(JSON.stringify(FIXED.memos))};
+  }catch{return {memos:JSON.parse(JSON.stringify(FIXED.memos))};}
+}
 function saveLS(){try{localStorage.setItem(LS_KEY,JSON.stringify(LS));}catch{}}
 let LS=loadLS();
-let nTasks={s:[],k:[]};
+// デフォルトメモがまだない場合は追加
+if(!LS.memos||LS.memos.length===0) LS.memos=JSON.parse(JSON.stringify(FIXED.memos));
+
+let nTasks={s:[],k:[],t:[]};
 let nScheds=[];
 
 const TODAY=new Date();TODAY.setHours(0,0,0,0);
@@ -269,23 +320,26 @@ async function syncAll(){
   const btn=document.getElementById('sync-btn');
   dot.className='sdot spin';lbl.textContent='同期中…';btn.disabled=true;
   try{
-    const tr=await nFetch('/v1/databases/'+TASK_DB+'/query','POST',{page_size:50});
-    const s=[],k=[];
+    const tr=await nFetch('/v1/databases/'+TASK_DB+'/query','POST',{page_size:100});
+    const s=[],k=[],t=[];
     (tr.results||[]).forEach(p=>{
       const pr=p.properties;
-      const name=(pr['Name']?.title||[]).map(t=>t.plain_text).join('');
+      const name=(pr['Name']?.title||[]).map(x=>x.plain_text).join('');
       if(!name)return;
       const cat=pr['カテゴリ']?.select?.name||'仕事';
       const pri=pr['優先度']?.select?.name||'中';
       const done=pr['ステータス']?.select?.name==='完了 🙌';
-      (cat==='個人'?k:s).push({text:name,done,pri,id:p.id});
+      const item={text:name,done,pri,id:p.id};
+      if(cat==='個人')k.push(item);
+      else if(cat==='転職')t.push(item);
+      else s.push(item);
     });
-    nTasks={s,k};
+    nTasks={s,k,t};
 
     const sr=await nFetch('/v1/databases/'+SCH_DB+'/query','POST',{page_size:50});
     nScheds=(sr.results||[]).map(p=>{
       const pr=p.properties;
-      const title=(pr['タイトル']?.title||[]).map(t=>t.plain_text).join('');
+      const title=(pr['タイトル']?.title||[]).map(x=>x.plain_text).join('');
       const date=pr['日付']?.date?.start||'';
       const cat=pr['カテゴリ']?.select?.name||'仕事';
       return title&&date?{title,date,cat,id:p.id}:null;
@@ -304,7 +358,8 @@ async function syncAll(){
 }
 
 async function addTask(cat){
-  const key=cat==='個人'?'k':'s';
+  const keyMap={仕事:'s',個人:'k',転職:'t'};
+  const key=keyMap[cat];
   const inp=document.getElementById('ni-'+key);
   const val=inp.value.trim();
   if(!val)return;
@@ -332,7 +387,7 @@ async function addTask(cat){
 async function toggleTask(key,idx){
   const task=nTasks[key][idx];
   const newDone=!task.done;
-  const chk=document.querySelector(`[data-key="${key}"][data-idx="${idx}"]`);
+  const chk=document.querySelector(`.chk[data-key="${key}"][data-idx="${idx}"]`);
   if(chk)chk.classList.add('loading');
   try{
     await nFetch('/v1/pages/'+task.id,'PATCH',{
@@ -374,12 +429,12 @@ async function addSch(){
 }
 
 function sw(i){
-  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('on',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+  document.querySelectorAll('.tbtn').forEach((b,j)=>b.classList.toggle('on',i===j));
 }
 
 function renderMetrics(){
-  const wDone=FIXED.weekTodos.filter(t=>t.done).length;
+  const wDone=FIXED.weekTodos.filter(x=>x.done).length;
   document.getElementById('m0').innerHTML=`
     <div class="metric"><div class="mlabel">入社まで</div><div class="mval">${Math.max(0,daysUntil('2026-06-01'))}</div><div class="msub">日</div></div>
     <div class="metric"><div class="mlabel">退職まで</div><div class="mval">${Math.max(0,daysUntil('2026-05-30'))}</div><div class="msub">日</div></div>
@@ -387,8 +442,8 @@ function renderMetrics(){
     <div class="metric"><div class="mlabel">今週TODO</div><div class="mval">${wDone}</div><div class="msub">/ ${FIXED.weekTodos.length}完了</div></div>`;
 }
 function renderWeek(){
-  document.getElementById('week-list').innerHTML=FIXED.weekTodos.map(t=>`
-    <div class="row"><div class="chk ${t.done?'done':''}"></div><span class="itxt ${t.done?'done':''}">${t.text}</span></div>`).join('');
+  document.getElementById('week-list').innerHTML=FIXED.weekTodos.map(x=>`
+    <div class="row"><div class="chk ${x.done?'done':''}"></div><span class="itxt ${x.done?'done':''}">${x.text}</span></div>`).join('');
 }
 function renderDocs(){
   document.getElementById('doc-list').innerHTML=FIXED.docs.map(d=>`
@@ -400,14 +455,15 @@ function renderMilestones(){
 }
 
 function renderTasks(){
-  ['s','k'].forEach(key=>{
+  const keyMap={s:'task-s',k:'task-k',t:'task-t'};
+  Object.entries(keyMap).forEach(([key,id])=>{
     const arr=nTasks[key];
-    document.getElementById('task-'+key).innerHTML=arr.length
-      ?arr.map((t,i)=>`
+    document.getElementById(id).innerHTML=arr.length
+      ?arr.map((x,i)=>`
         <div class="row">
-          <div class="chk ${t.done?'done':''}" data-key="${key}" data-idx="${i}" onclick="toggleTask('${key}',${i})"></div>
-          <div style="flex:1;min-width:0;"><div class="itxt ${t.done?'done':''}">${t.text}</div></div>
-          <span class="badge ${priColor[t.pri]||'bgray'}">${t.pri}</span>
+          <div class="chk ${x.done?'done':''}" data-key="${key}" data-idx="${i}" onclick="toggleTask('${key}',${i})"></div>
+          <div style="flex:1;min-width:0;"><div class="itxt ${x.done?'done':''}">${x.text}</div></div>
+          <span class="badge ${priColor[x.pri]||'bgray'}">${x.pri}</span>
         </div>`).join('')
       :'<div class="empty">Notionと同期してください</div>';
   });
@@ -428,7 +484,7 @@ function renderMemos(){
           <div class="isub">${m.ja}</div>
         </div>
         <span class="badge ${catColor[m.cat]||'bgray'}">${m.cat}</span>
-        <span class="del" onclick="LS.memos.splice(${i},1);saveLS();renderMemos();">×</span>
+        <span style="font-size:16px;cursor:pointer;color:var(--text3);padding:0 2px;" onclick="LS.memos.splice(${i},1);saveLS();renderMemos();">×</span>
       </div>`;}).join('')
     :'<div class="empty">メモなし</div>';
 }
@@ -445,11 +501,11 @@ function addMemo(){
 
 function renderSch(){
   document.getElementById('sch-list').innerHTML=nScheds.length
-    ?nScheds.map(s=>`
+    ?nScheds.map(x=>`
       <div class="row">
-        <div class="itxt">${s.title}</div>
-        <span class="badge ${catColor[s.cat]||'bgray'}">${s.cat}</span>
-        <span class="dchip">${dlabel(s.date)}</span>
+        <div class="itxt">${x.title}</div>
+        <span class="badge ${catColor[x.cat]||'bgray'}">${x.cat}</span>
+        <span class="dchip">${dlabel(x.date)}</span>
       </div>`).join('')
     :'<div class="empty">Notionと同期してください</div>';
   document.getElementById('dead-list').innerHTML=[...FIXED.deadlines].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(d=>`
