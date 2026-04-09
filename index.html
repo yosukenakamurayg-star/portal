@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>マイポータル</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-primary: #1A73E8;
+    --md-primary-container: #D3E3FD;
+    --md-on-primary: #fff;
+    --md-secondary: #1E6A4A;
+    --md-tertiary: #7B3F9E;
+    --md-surface: #F8FAFE;
+    --md-surface-1: #fff;
+    --md-surface-2: #F0F4FF;
+    --md-outline: #C4C7CF;
+    --md-outline-variant: #E3E6EF;
+    --md-on-surface: #1A1C1E;
+    --md-on-surface-variant: #44474F;
+    --md-error: #B3261E;
+    --md-warning: #E8710A;
+    --md-success: #1E6A4A;
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 100px;
+    --font: 'Google Sans', 'Noto Sans JP', sans-serif;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+font-family: var(–font);
+background: var(–md-surface);
+color: var(–md-on-surface);
+max-width: 430px;
+margin: 0 auto;
+min-height: 100vh;
+position: relative;
+overflow-x: hidden;
+}
+
+/* ── TOP APP BAR ── */
+.app-bar {
+position: sticky; top: 0; z-index: 100;
+background: var(–md-surface-1);
+padding: 12px 16px 8px;
+border-bottom: 1px solid var(–md-outline-variant);
+display: flex; align-items: center; gap: 12px;
+}
+.app-bar-title { font-size: 22px; font-weight: 500; color: var(–md-on-surface); flex: 1; }
+.app-bar-avatar {
+width: 36px; height: 36px; border-radius: 50%;
+background: var(–md-primary); color: #fff;
+display: flex; align-items: center; justify-content: center;
+font-size: 14px; font-weight: 600; cursor: pointer;
+flex-shrink: 0;
+}
+.app-bar-date { font-size: 12px; color: var(–md-on-surface-variant); }
+
+/* ── SCROLL CONTENT ── */
+.content { padding-bottom: 80px; }
+
+/* ── TABS (top) ── */
+.tab-bar {
+display: flex; gap: 0;
+background: var(–md-surface-1);
+border-bottom: 1px solid var(–md-outline-variant);
+overflow-x: auto; scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+flex: 1; min-width: 80px; padding: 12px 8px 10px;
+font-family: var(–font); font-size: 13px; font-weight: 500;
+color: var(–md-on-surface-variant); background: none; border: none;
+cursor: pointer; position: relative; white-space: nowrap;
+transition: color .2s;
+}
+.tab-btn.active { color: var(–md-primary); }
+.tab-btn::after {
+content: ‘’; position: absolute; bottom: 0; left: 16px; right: 16px;
+height: 3px; border-radius: 3px 3px 0 0;
+background: var(–md-primary); opacity: 0; transition: opacity .2s;
+}
+.tab-btn.active::after { opacity: 1; }
+.tab-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+
+/* ── SECTION ── */
+.section { display: none; animation: fadeIn .2s ease; }
+.section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── DASHBOARD ── */
+.dash-header {
+padding: 20px 16px 12px;
+background: linear-gradient(135deg, #1A73E8 0%, #1557B0 100%);
+color: #fff;
+}
+.dash-greeting { font-size: 13px; opacity: .85; margin-bottom: 4px; }
+.dash-name { font-size: 24px; font-weight: 500; margin-bottom: 12px; }
+.dash-cards-row { display: flex; gap: 10px; }
+.dash-mini-card {
+flex: 1; background: rgba(255,255,255,.18); border-radius: var(–radius-md);
+padding: 12px; backdrop-filter: blur(8px);
+}
+.dash-mini-label { font-size: 11px; opacity: .8; margin-bottom: 4px; }
+.dash-mini-value { font-size: 24px; font-weight: 600; }
+.dash-mini-sub { font-size: 11px; opacity: .75; }
+
+.dash-section-title {
+font-size: 12px; font-weight: 600; color: var(–md-primary);
+letter-spacing: .08em; text-transform: uppercase;
+padding: 16px 16px 8px;
+}
+
+/* ── TASK CARD (compact) ── */
+.task-card {
+background: var(–md-surface-1);
+margin: 0 12px 8px;
+border-radius: var(–radius-lg);
+overflow: hidden;
+box-shadow: 0 1px 3px rgba(0,0,0,.08);
+position: relative;
+transition: box-shadow .2s;
+user-select: none;
+}
+.task-card:active { box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+
+.task-card-inner {
+padding: 12px 14px;
+display: flex; align-items: center; gap: 12px;
+position: relative; z-index: 1;
+background: var(–md-surface-1);
+transition: transform .25s cubic-bezier(.25,.46,.45,.94);
+}
+.task-card.swiped .task-card-inner { transform: translateX(-80px); }
+
+.task-check {
+width: 22px; height: 22px; border-radius: 50%;
+border: 2px solid var(–md-outline);
+flex-shrink: 0; cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+transition: all .2s; background: #fff;
+}
+.task-check.done {
+background: var(–md-success); border-color: var(–md-success);
+}
+.task-check.done::after { content: ‘✓’; color: #fff; font-size: 12px; font-weight: 700; }
+
+.task-body { flex: 1; min-width: 0; }
+.task-title {
+font-size: 14px; font-weight: 500; color: var(–md-on-surface);
+white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+margin-bottom: 4px;
+}
+.task-title.done { text-decoration: line-through; color: var(–md-on-surface-variant); }
+.task-chips { display: flex; gap: 4px; flex-wrap: nowrap; overflow: hidden; }
+
+.chip {
+display: inline-flex; align-items: center;
+padding: 2px 8px; border-radius: var(–radius-full);
+font-size: 11px; font-weight: 500; white-space: nowrap; flex-shrink: 0;
+}
+.chip-cat-仕事 { background: #E8F0FE; color: #1A73E8; }
+.chip-cat-個人 { background: #E6F4EA; color: #1E6A4A; }
+.chip-cat-転職 { background: #F3E8FD; color: #7B3F9E; }
+.chip-pri-高 { background: #FCE8E6; color: #B3261E; }
+.chip-pri-中 { background: #FEF7E0; color: #B06000; }
+.chip-pri-低 { background: #F1F3F4; color: #5F6368; }
+.chip-status-未着手 { background: #F1F3F4; color: #5F6368; }
+.chip-status-対応中 { background: #E8F0FE; color: #1A73E8; }
+.chip-status-完了 { background: #E6F4EA; color: #1E6A4A; }
+
+/* swipe action */
+.task-swipe-action {
+position: absolute; right: 0; top: 0; bottom: 0; width: 80px;
+display: flex; align-items: center; justify-content: center;
+background: var(–md-success); border-radius: 0 var(–radius-lg) var(–radius-lg) 0;
+color: #fff; font-size: 12px; font-weight: 600; flex-direction: column; gap: 2px;
+opacity: 0; transition: opacity .25s;
+}
+.task-card.swiped .task-swipe-action { opacity: 1; }
+.task-swipe-icon { font-size: 20px; }
+
+/* detail modal */
+.modal-overlay {
+display: none; position: fixed; inset: 0; z-index: 200;
+background: rgba(0,0,0,.4); align-items: flex-end;
+}
+.modal-overlay.open { display: flex; animation: fadeIn .2s; }
+.modal-sheet {
+width: 100%; background: var(–md-surface-1);
+border-radius: 28px 28px 0 0; padding: 8px 20px 40px;
+animation: slideUp .3s cubic-bezier(.25,.46,.45,.94);
+max-height: 80vh; overflow-y: auto;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle {
+width: 40px; height: 4px; border-radius: 2px;
+background: var(–md-outline); margin: 8px auto 16px;
+}
+.modal-title { font-size: 20px; font-weight: 500; margin-bottom: 12px; }
+.modal-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.modal-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(–md-outline-variant); font-size: 14px; }
+.modal-row-label { color: var(–md-on-surface-variant); width: 72px; font-size: 13px; flex-shrink: 0; }
+.modal-actions { display: flex; gap: 8px; margin-top: 20px; }
+.btn-filled {
+flex: 1; padding: 12px; border-radius: var(–radius-full);
+background: var(–md-primary); color: #fff;
+border: none; font-family: var(–font); font-size: 14px; font-weight: 500;
+cursor: pointer; transition: opacity .15s;
+}
+.btn-filled:active { opacity: .8; }
+.btn-tonal {
+flex: 1; padding: 12px; border-radius: var(–radius-full);
+background: var(–md-primary-container); color: var(–md-primary);
+border: none; font-family: var(–font); font-size: 14px; font-weight: 500;
+cursor: pointer; transition: opacity .15s;
+}
+.btn-tonal:active { opacity: .8; }
+
+/* ── SCHEDULE CARD ── */
+.sched-card {
+background: var(–md-surface-1); margin: 0 12px 8px;
+border-radius: var(–radius-lg); padding: 12px 14px;
+display: flex; align-items: center; gap: 14px;
+box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+.sched-date-box {
+width: 44px; text-align: center; flex-shrink: 0;
+background: var(–md-primary-container); border-radius: var(–radius-md);
+padding: 6px 4px;
+}
+.sched-month { font-size: 10px; color: var(–md-primary); font-weight: 600; text-transform: uppercase; }
+.sched-day { font-size: 22px; font-weight: 700; color: var(–md-primary); line-height: 1; }
+.sched-body { flex: 1; min-width: 0; }
+.sched-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.sched-chips { display: flex; gap: 4px; }
+
+/* ── FAB ── */
+.fab {
+position: fixed; bottom: 88px; right: 20px; z-index: 50;
+width: 56px; height: 56px; border-radius: 16px;
+background: var(–md-primary); color: #fff;
+border: none; font-size: 24px; cursor: pointer;
+box-shadow: 0 4px 12px rgba(26,115,232,.4);
+display: flex; align-items: center; justify-content: center;
+transition: transform .15s, box-shadow .15s;
+}
+.fab:active { transform: scale(.94); box-shadow: 0 2px 8px rgba(26,115,232,.3); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+width: 100%; max-width: 430px; z-index: 100;
+background: var(–md-surface-1);
+border-top: 1px solid var(–md-outline-variant);
+display: flex; padding: 8px 0 16px;
+}
+.nav-btn {
+flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+background: none; border: none; cursor: pointer; padding: 4px 0;
+font-family: var(–font); color: var(–md-on-surface-variant); transition: color .2s;
+}
+.nav-btn.active { color: var(–md-primary); }
+.nav-indicator {
+width: 64px; height: 32px; border-radius: var(–radius-full);
+display: flex; align-items: center; justify-content: center;
+transition: background .2s;
+font-size: 20px;
+}
+.nav-btn.active .nav-indicator { background: var(–md-primary-container); }
+.nav-label { font-size: 12px; font-weight: 500; }
+
+/* ── ADD TASK FORM ── */
+.add-form {
+background: var(–md-surface-1);
+border-radius: 28px 28px 0 0;
+padding: 8px 20px 40px;
+}
+.form-title { font-size: 18px; font-weight: 500; margin-bottom: 16px; }
+.form-field {
+width: 100%; padding: 14px 16px;
+border: 1px solid var(–md-outline-variant);
+border-radius: var(–radius-md); font-family: var(–font);
+font-size: 14px; color: var(–md-on-surface);
+background: var(–md-surface); outline: none; margin-bottom: 12px;
+transition: border-color .2s;
+}
+.form-field:focus { border-color: var(–md-primary); }
+.form-row { display: flex; gap: 8px; }
+.form-select {
+flex: 1; padding: 12px 14px;
+border: 1px solid var(–md-outline-variant);
+border-radius: var(–radius-md); font-family: var(–font);
+font-size: 13px; color: var(–md-on-surface);
+background: var(–md-surface); outline: none;
+appearance: none;
+}
+
+/* ── EMPTY STATE ── */
+.empty { text-align: center; padding: 48px 24px; color: var(–md-on-surface-variant); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; opacity: .5; }
+.empty-text { font-size: 14px; }
+
+/* ── SEARCH BAR ── */
+.search-bar {
+margin: 12px 12px 4px; padding: 10px 16px;
+background: var(–md-surface-2); border-radius: var(–radius-full);
+display: flex; align-items: center; gap: 10px;
+border: 1px solid var(–md-outline-variant);
+}
+.search-bar input {
+flex: 1; border: none; background: none; font-family: var(–font);
+font-size: 14px; color: var(–md-on-surface); outline: none;
+}
+.search-icon { color: var(–md-on-surface-variant); font-size: 18px; }
+
+/* ── FILTER CHIPS ── */
+.filter-row { display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; scrollbar-width: none; }
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-chip {
+padding: 6px 14px; border-radius: var(–radius-full);
+font-family: var(–font); font-size: 12px; font-weight: 500;
+border: 1px solid var(–md-outline); background: var(–md-surface-1);
+color: var(–md-on-surface-variant); cursor: pointer; white-space: nowrap;
+transition: all .15s;
+}
+.filter-chip.active {
+background: var(–md-primary-container); border-color: var(–md-primary);
+color: var(–md-primary);
+}
+
+/* ── LOADING ── */
+.loading { text-align: center; padding: 32px; color: var(–md-on-surface-variant); font-size: 13px; }
+.spinner { width: 24px; height: 24px; border: 2px solid var(–md-outline-variant); border-top-color: var(–md-primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── KNOWLEDGE CARD ── */
+.know-card {
+background: var(–md-surface-1); margin: 0 12px 8px;
+border-radius: var(–radius-lg); padding: 14px;
+box-shadow: 0 1px 3px rgba(0,0,0,.08); cursor: pointer;
+}
+.know-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.know-preview { font-size: 12px; color: var(–md-on-surface-variant); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
+.know-footer { display: flex; justify-content: space-between; align-items: center; }
+.know-date { font-size: 11px; color: var(–md-on-surface-variant); }
+
+/* ripple */
+.ripple { position: relative; overflow: hidden; }
+.ripple::before { content: ‘’; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity .15s; border-radius: inherit; }
+.ripple:active::before { opacity: .06; }
+</style>
+
+</head>
+<body>
+
+<!-- APP BAR -->
+
+<div class="app-bar">
+  <div>
+    <div class="app-bar-title">マイポータル</div>
+    <div class="app-bar-date" id="today-date"></div>
+  </div>
+  <div class="app-bar-avatar">陽</div>
+</div>
+
+<!-- TAB BAR -->
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('dashboard', this)">
+    <span class="tab-icon">🏠</span>ホーム
+  </button>
+  <button class="tab-btn" onclick="switchTab('tasks', this)">
+    <span class="tab-icon">✅</span>タスク
+  </button>
+  <button class="tab-btn" onclick="switchTab('schedule', this)">
+    <span class="tab-icon">📅</span>予定
+  </button>
+  <button class="tab-btn" onclick="switchTab('knowledge', this)">
+    <span class="tab-icon">📚</span>知識
+  </button>
+</div>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+  <!-- DASHBOARD -->
+
+  <div id="sec-dashboard" class="section active">
+    <div class="dash-header">
+      <div class="dash-greeting" id="greeting">おはようございます</div>
+      <div class="dash-name">中村 陽介さん</div>
+      <div class="dash-cards-row">
+        <div class="dash-mini-card">
+          <div class="dash-mini-label">未着手タスク</div>
+          <div class="dash-mini-value" id="count-pending">-</div>
+          <div class="dash-mini-sub">件</div>
+        </div>
+        <div class="dash-mini-card">
+          <div class="dash-mini-label">今日の予定</div>
+          <div class="dash-mini-value" id="count-today">-</div>
+          <div class="dash-mini-sub">件</div>
+        </div>
+        <div class="dash-mini-card">
+          <div class="dash-mini-label">完了済み</div>
+          <div class="dash-mini-value" id="count-done">-</div>
+          <div class="dash-mini-sub">件</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-section-title">優先度「高」のタスク</div>
+    <div id="dash-high-tasks"><div class="loading"><div class="spinner"></div>読み込み中...</div></div>
+    <div class="dash-section-title">直近の予定</div>
+    <div id="dash-upcoming"><div class="loading"><div class="spinner"></div>読み込み中...</div></div>
+  </div>
+
+  <!-- TASKS -->
+
+  <div id="sec-tasks" class="section">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="task-search" placeholder="タスクを検索..." oninput="filterTasks()">
+    </div>
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setFilter('cat','all',this)">すべて</button>
+      <button class="filter-chip" onclick="setFilter('cat','仕事',this)">仕事</button>
+      <button class="filter-chip" onclick="setFilter('cat','個人',this)">個人</button>
+      <button class="filter-chip" onclick="setFilter('cat','転職',this)">転職</button>
+    </div>
+    <div class="filter-row" style="padding-top:0">
+      <button class="filter-chip active" onclick="setFilter('status','all',this)" data-group="status">すべて</button>
+      <button class="filter-chip" onclick="setFilter('status','未着手',this)" data-group="status">未着手</button>
+      <button class="filter-chip" onclick="setFilter('status','対応中',this)" data-group="status">対応中</button>
+      <button class="filter-chip" onclick="setFilter('status','完了',this)" data-group="status">完了</button>
+    </div>
+    <div id="task-list"><div class="loading"><div class="spinner"></div>読み込み中...</div></div>
+  </div>
+
+  <!-- SCHEDULE -->
+
+  <div id="sec-schedule" class="section">
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setSchedFilter('all',this)">すべて</button>
+      <button class="filter-chip" onclick="setSchedFilter('仕事',this)">仕事</button>
+      <button class="filter-chip" onclick="setSchedFilter('転職',this)">転職</button>
+      <button class="filter-chip" onclick="setSchedFilter('個人',this)">個人</button>
+    </div>
+    <div id="schedule-list"><div class="loading"><div class="spinner"></div>読み込み中...</div></div>
+  </div>
+
+  <!-- KNOWLEDGE -->
+
+  <div id="sec-knowledge" class="section">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="知識を検索..." oninput="filterKnowledge(this.value)">
+    </div>
+    <div id="knowledge-list"><div class="loading"><div class="spinner"></div>読み込み中...</div></div>
+  </div>
+
+</div>
+
+<!-- FAB -->
+
+<button class="fab" onclick="openAddTask()">＋</button>
+
+<!-- BOTTOM NAV (alias for tabs) -->
+
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('dashboard',this)" id="nav-dashboard">
+    <div class="nav-indicator">🏠</div>
+    <span class="nav-label">ホーム</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('tasks',this)" id="nav-tasks">
+    <div class="nav-indicator">✅</div>
+    <span class="nav-label">タスク</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('schedule',this)" id="nav-schedule">
+    <div class="nav-indicator">📅</div>
+    <span class="nav-label">予定</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('knowledge',this)" id="nav-knowledge">
+    <div class="nav-indicator">📚</div>
+    <span class="nav-label">知識</span>
+  </button>
+</div>
+
+<!-- TASK DETAIL MODAL -->
+
+<div class="modal-overlay" id="task-modal" onclick="closeModal('task-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-chips" id="modal-chips"></div>
+    <div id="modal-rows"></div>
+    <div class="modal-actions">
+      <button class="btn-tonal" onclick="changeStatus()">ステータス変更</button>
+      <button class="btn-filled" onclick="closeModal('task-modal')">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+
+<div class="modal-overlay" id="add-modal" onclick="closeModal('add-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="form-title">タスクを追加</div>
+    <input class="form-field" id="new-title" type="text" placeholder="タスク名">
+    <div class="form-row">
+      <select class="form-select" id="new-cat">
+        <option value="仕事">仕事</option>
+        <option value="個人">個人</option>
+        <option value="転職">転職</option>
+      </select>
+      <select class="form-select" id="new-pri">
+        <option value="高">優先度：高</option>
+        <option value="中">優先度：中</option>
+        <option value="低">優先度：低</option>
+      </select>
+    </div>
+    <input class="form-field" id="new-due" type="date" style="margin-top:8px">
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn-tonal" onclick="closeModal('add-modal')">キャンセル</button>
+      <button class="btn-filled" onclick="addTask()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const NOTION_TOKEN = 'ntn_V46092302432x0V2m9PzBKX1AekFAq3EFxDFvKgG9Sz1zZ';
+const PROXY = 'https://notion-proxy.yosuke-nakamura-yg.workers.dev';
+const DB_TASKS = 'dc754a0d-0b70-4775-82f4-e7b2fc8e3f73';
+const DB_SCHED = '5abb5d37-3eb3-4b23-895d-7879a57618d4';
+
+// ── STATE ──
+let allTasks = [], allSched = [], allKnow = [];
+let filterCat = 'all', filterStatus = 'all', schedFilter = 'all';
+let currentTaskId = null;
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  setGreeting();
+  setDate();
+  loadTasks();
+  loadSchedule();
+  loadKnowledge();
+});
+
+function setGreeting() {
+  const h = new Date().getHours();
+  const g = h < 10 ? 'おはようございます' : h < 17 ? 'こんにちは' : 'お疲れ様です';
+  document.getElementById('greeting').textContent = g;
+}
+
+function setDate() {
+  const d = new Date();
+  const days = ['日','月','火','水','木','金','土'];
+  document.getElementById('today-date').textContent =
+    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${days[d.getDay()]}）`;
+}
+
+// ── API ──
+async function notionGet(dbId, filter = {}) {
+  try {
+    const body = { page_size: 100 };
+    if (filter.filter) body.filter = filter.filter;
+    if (filter.sorts) body.sorts = filter.sorts;
+    const res = await fetch(`${PROXY}/v1/databases/${dbId}/query`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    return data.results || [];
+  } catch(e) { return []; }
+}
+
+async function notionPatch(pageId, props) {
+  await fetch(`${PROXY}/v1/pages/${pageId}`, {
+    method: 'PATCH',
+    headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ properties: props })
+  });
+}
+
+async function notionCreate(dbId, props) {
+  await fetch(`${PROXY}/v1/pages`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${NOTION_TOKEN}`, 'Notion-Version': '2022-06-28', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ parent: { database_id: dbId }, properties: props })
+  });
+}
+
+// ── TASK HELPERS ──
+function getTaskProps(page) {
+  const p = page.properties;
+  return {
+    id: page.id,
+    title: p['Name']?.title?.[0]?.text?.content || '（無題）',
+    cat: p['カテゴリ']?.select?.name || '',
+    status: p['ステータス']?.select?.name || '未着手',
+    pri: p['優先度']?.select?.name || '',
+    due: p['期限']?.date?.start || ''
+  };
+}
+
+function getSchedProps(page) {
+  const p = page.properties;
+  return {
+    id: page.id,
+    title: p['タイトル']?.title?.[0]?.text?.content || '（無題）',
+    cat: p['カテゴリ']?.select?.name || '',
+    status: p['ステータス']?.select?.name || '',
+    date: p['日付']?.date?.start || '',
+    memo: p['メモ']?.rich_text?.[0]?.text?.content || ''
+  };
+}
+
+// ── LOAD DATA ──
+async function loadTasks() {
+  const pages = await notionGet(DB_TASKS, { sorts: [{ property: '優先度', direction: 'ascending' }] });
+  allTasks = pages.map(getTaskProps);
+  renderTasks();
+  updateDashboard();
+}
+
+async function loadSchedule() {
+  const pages = await notionGet(DB_SCHED, { sorts: [{ property: '日付', direction: 'ascending' }] });
+  allSched = pages.map(getSchedProps);
+  renderSchedule();
+  updateDashboard();
+}
+
+async function loadKnowledge() {
+  allKnow = [
+    { id: '1', title: '公共クラウド移行の課題整理', preview: 'レガシーシステムとの互換性、セキュリティ要件、調達プロセスの複雑さ...', tags: ['クラウド', '公共'], date: '2026-03-24' },
+    { id: '2', title: 'VMware VCF提案スライド構成テンプレート', preview: 'As-Is/To-Be分析、ソリューション概要、ROI試算、導入ロードマップ...', tags: ['VMware', '提案'], date: '2026-03-23' },
+    { id: '3', title: '外資系ビジネス英語フレーズ集', preview: 'Let me circle back on that. / I\'d like to piggyback on that point...', tags: ['英語', '学習'], date: '2026-03-22' },
+  ];
+  renderKnowledge();
+}
+
+// ── RENDER TASKS ──
+function renderTasks() {
+  const q = (document.getElementById('task-search')?.value || '').toLowerCase();
+  const list = allTasks.filter(t => {
+    if (filterCat !== 'all' && t.cat !== filterCat) return false;
+    if (filterStatus !== 'all') {
+      const statusMatch = filterStatus === '完了' ? t.status.includes('完了') : t.status === filterStatus;
+      if (!statusMatch) return false;
+    }
+    if (q && !t.title.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  const el = document.getElementById('task-list');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">タスクはありません</div></div>';
+    return;
+  }
+  el.innerHTML = list.map(t => taskCardHTML(t)).join('');
+  initSwipe();
+}
+
+function taskCardHTML(t) {
+  const isDone = t.status.includes('完了');
+  const statusLabel = t.status.replace(' 🙌','');
+  return `
+  <div class="task-card ripple" id="card-${t.id}" data-id="${t.id}">
+    <div class="task-swipe-action">
+      <span class="task-swipe-icon">✓</span>完了
+    </div>
+    <div class="task-card-inner" onclick="openTaskDetail('${t.id}')">
+      <div class="task-check ${isDone?'done':''}" onclick="event.stopPropagation();toggleDone('${t.id}')"></div>
+      <div class="task-body">
+        <div class="task-title ${isDone?'done':''}">${t.title}</div>
+        <div class="task-chips">
+          ${t.cat ? `<span class="chip chip-cat-${t.cat}">${t.cat}</span>` : ''}
+          ${t.status ? `<span class="chip chip-status-${statusLabel}">${statusLabel}</span>` : ''}
+          ${t.pri ? `<span class="chip chip-pri-${t.pri}">${t.pri}</span>` : ''}
+          ${t.due ? `<span class="chip" style="background:#F1F3F4;color:#5F6368">📅 ${t.due}</span>` : ''}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── RENDER SCHEDULE ──
+function renderSchedule() {
+  const list = allSched.filter(s => schedFilter === 'all' || s.cat === schedFilter);
+  const el = document.getElementById('schedule-list');
+  if (!list.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">予定はありません</div></div>';
+    return;
+  }
+  el.innerHTML = list.map(s => {
+    const d = s.date ? new Date(s.date) : null;
+    const month = d ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] : '';
+    const day = d ? d.getDate() : '-';
+    return `
+    <div class="sched-card">
+      <div class="sched-date-box">
+        <div class="sched-month">${month}</div>
+        <div class="sched-day">${day}</div>
+      </div>
+      <div class="sched-body">
+        <div class="sched-title">${s.title}</div>
+        <div class="sched-chips">
+          ${s.cat ? `<span class="chip chip-cat-${s.cat}">${s.cat}</span>` : ''}
+          ${s.status ? `<span class="chip chip-status-${s.status}">${s.status}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── RENDER KNOWLEDGE ──
+function renderKnowledge() {
+  const el = document.getElementById('knowledge-list');
+  el.innerHTML = allKnow.map(k => `
+  <div class="know-card ripple">
+    <div class="know-title">${k.title}</div>
+    <div class="know-preview">${k.preview}</div>
+    <div class="know-footer">
+      <div style="display:flex;gap:4px">${k.tags.map(t=>`<span class="chip" style="background:#E8F0FE;color:#1A73E8">${t}</span>`).join('')}</div>
+      <div class="know-date">${k.date}</div>
+    </div>
+  </div>`).join('');
+}
+
+function filterKnowledge(q) {
+  const filtered = allKnow.filter(k => !q || k.title.toLowerCase().includes(q.toLowerCase()) || k.preview.toLowerCase().includes(q.toLowerCase()));
+  const el = document.getElementById('knowledge-list');
+  el.innerHTML = filtered.map(k => `
+  <div class="know-card ripple">
+    <div class="know-title">${k.title}</div>
+    <div class="know-preview">${k.preview}</div>
+    <div class="know-footer">
+      <div style="display:flex;gap:4px">${k.tags.map(t=>`<span class="chip" style="background:#E8F0FE;color:#1A73E8">${t}</span>`).join('')}</div>
+      <div class="know-date">${k.date}</div>
+    </div>
+  </div>`).join('') || '<div class="empty"><div class="empty-icon">📚</div><div class="empty-text">見つかりませんでした</div></div>';
+}
+
+// ── DASHBOARD ──
+function updateDashboard() {
+  const pending = allTasks.filter(t => !t.status.includes('完了')).length;
+  const done = allTasks.filter(t => t.status.includes('完了')).length;
+  const today = new Date().toISOString().split('T')[0];
+  const todayCount = allSched.filter(s => s.date === today).length;
+
+  document.getElementById('count-pending').textContent = pending;
+  document.getElementById('count-done').textContent = done;
+  document.getElementById('count-today').textContent = todayCount;
+
+  const highTasks = allTasks.filter(t => t.pri === '高' && !t.status.includes('完了')).slice(0, 5);
+  const dashHigh = document.getElementById('dash-high-tasks');
+  dashHigh.innerHTML = highTasks.length ? highTasks.map(t => taskCardHTML(t)).join('') :
+    '<div class="empty"><div class="empty-icon">🎉</div><div class="empty-text">高優先度タスクはありません</div></div>';
+
+  const upcoming = allSched.filter(s => s.date >= today && s.status !== 'キャンセル').slice(0, 5);
+  const dashUp = document.getElementById('dash-upcoming');
+  dashUp.innerHTML = upcoming.length ? upcoming.map(s => {
+    const d = s.date ? new Date(s.date) : null;
+    const month = d ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] : '';
+    const day = d ? d.getDate() : '-';
+    return `
+    <div class="sched-card">
+      <div class="sched-date-box"><div class="sched-month">${month}</div><div class="sched-day">${day}</div></div>
+      <div class="sched-body">
+        <div class="sched-title">${s.title}</div>
+        <div class="sched-chips">${s.cat ? `<span class="chip chip-cat-${s.cat}">${s.cat}</span>` : ''}</div>
+      </div>
+    </div>`;
+  }).join('') : '<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">直近の予定はありません</div></div>';
+
+  if (highTasks.length) initSwipe();
+}
+
+// ── SWIPE TO COMPLETE ──
+function initSwipe() {
+  document.querySelectorAll('.task-card').forEach(card => {
+    let startX = 0, isDragging = false;
+    card.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    }, { passive: true });
+    card.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      const dx = startX - e.touches[0].clientX;
+      if (dx > 40) card.classList.add('swiped');
+      else if (dx < 10) card.classList.remove('swiped');
+    }, { passive: true });
+    card.addEventListener('touchend', () => {
+      if (card.classList.contains('swiped')) {
+        const id = card.dataset.id;
+        setTimeout(() => { card.classList.remove('swiped'); toggleDone(id); }, 500);
+      }
+      isDragging = false;
+    });
+  });
+}
+
+// ── TASK ACTIONS ──
+async function toggleDone(id) {
+  const t = allTasks.find(x => x.id === id);
+  if (!t) return;
+  const newStatus = t.status.includes('完了') ? '未着手' : '完了 🙌';
+  await notionPatch(id, { 'ステータス': { select: { name: newStatus } } });
+  t.status = newStatus;
+  renderTasks();
+  updateDashboard();
+}
+
+function openTaskDetail(id) {
+  const t = allTasks.find(x => x.id === id);
+  if (!t) return;
+  currentTaskId = id;
+  document.getElementById('modal-title').textContent = t.title;
+  const statusLabel = t.status.replace(' 🙌','');
+  document.getElementById('modal-chips').innerHTML = `
+    ${t.cat ? `<span class="chip chip-cat-${t.cat}">${t.cat}</span>` : ''}
+    ${t.status ? `<span class="chip chip-status-${statusLabel}">${statusLabel}</span>` : ''}
+    ${t.pri ? `<span class="chip chip-pri-${t.pri}">${t.pri}</span>` : ''}
+  `;
+  document.getElementById('modal-rows').innerHTML = `
+    ${t.due ? `<div class="modal-row"><span class="modal-row-label">期限</span>${t.due}</div>` : ''}
+    <div class="modal-row"><span class="modal-row-label">ステータス</span>${t.status}</div>
+    <div class="modal-row"><span class="modal-row-label">優先度</span>${t.pri}</div>
+  `;
+  document.getElementById('task-modal').classList.add('open');
+}
+
+async function changeStatus() {
+  if (!currentTaskId) return;
+  const t = allTasks.find(x => x.id === currentTaskId);
+  if (!t) return;
+  const cycle = ['未着手', '対応中', '完了 🙌'];
+  const idx = cycle.findIndex(s => t.status.includes(s.replace(' 🙌','')));
+  const next = cycle[(idx + 1) % cycle.length];
+  await notionPatch(currentTaskId, { 'ステータス': { select: { name: next } } });
+  t.status = next;
+  renderTasks();
+  updateDashboard();
+  closeModal('task-modal');
+}
+
+async function addTask() {
+  const title = document.getElementById('new-title').value.trim();
+  if (!title) return;
+  const cat = document.getElementById('new-cat').value;
+  const pri = document.getElementById('new-pri').value;
+  const due = document.getElementById('new-due').value;
+  await notionCreate(DB_TASKS, {
+    'Name': { title: [{ text: { content: title } }] },
+    'カテゴリ': { select: { name: cat } },
+    '優先度': { select: { name: pri } },
+    'ステータス': { select: { name: '未着手' } },
+    ...(due ? { '期限': { date: { start: due } } } : {})
+  });
+  document.getElementById('new-title').value = '';
+  closeModal('add-modal');
+  await loadTasks();
+}
+
+// ── FILTERS ──
+function setFilter(type, val, el) {
+  if (type === 'cat') {
+    filterCat = val;
+    document.querySelectorAll('.filter-row:first-of-type .filter-chip').forEach(c => c.classList.remove('active'));
+  } else {
+    filterStatus = val;
+    document.querySelectorAll('[data-group="status"]').forEach(c => c.classList.remove('active'));
+  }
+  el.classList.add('active');
+  renderTasks();
+}
+
+function filterTasks() { renderTasks(); }
+
+function setSchedFilter(val, el) {
+  schedFilter = val;
+  document.querySelectorAll('#sec-schedule .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderSchedule();
+}
+
+// ── MODALS ──
+function openAddTask() { document.getElementById('add-modal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── TAB SWITCH ──
+function switchTab(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  if (el.classList.contains('tab-btn')) {
+    el.classList.add('active');
+    document.getElementById('nav-'+name)?.classList.add('active');
+  } else {
+    el.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      if (b.textContent.includes({dashboard:'ホーム',tasks:'タスク',schedule:'予定',knowledge:'知識'}[name])) b.classList.add('active');
+    });
+  }
+}
+</script>
+
+</body>
+</html>
